@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { canUseDOM } from '@tager/web-core';
+import { canUseDOM, useUpdateEffect } from '@tager/web-core';
 
 import { isPreloaderEnabled } from './Preloader.helpers';
 import * as S from './Preloader.style';
@@ -35,7 +35,7 @@ function Preloader({ hidden: hiddenProp }: Props) {
     setStatus('HIDDEN');
   }
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     if (isControlled) {
       setStatus(hiddenProp ? 'FADING_OUT' : 'VISIBLE');
     }
