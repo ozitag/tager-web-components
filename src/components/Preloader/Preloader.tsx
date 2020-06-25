@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { canUseDOM, useUpdateEffect } from '@tager/web-core';
+import { isBrowser, useUpdateEffect } from '@tager/web-core';
 
 import { isPreloaderEnabled } from './Preloader.helpers';
 import * as S from './Preloader.style';
@@ -19,16 +19,16 @@ type Props = {
 function Preloader({ hidden: hiddenProp }: Props) {
   const isControlled = hiddenProp !== undefined;
 
-  function isInitiallyHidden(): boolean {
-    return isControlled
-      ? Boolean(hiddenProp)
-      : isPreloaderEnabled() &&
-          canUseDOM() &&
-          Boolean(window.isPreloaderHidden);
+  function isInitiallyVisible(): boolean {
+    const isVisible = isBrowser()
+      ? isPreloaderEnabled() && !window.isPreloaderHidden
+      : isPreloaderEnabled();
+
+    return isControlled ? !hiddenProp : isVisible;
   }
 
   const [status, setStatus] = useState<PreloaderStatus>(
-    isInitiallyHidden() ? 'HIDDEN' : 'VISIBLE'
+    isInitiallyVisible() ? 'VISIBLE' : 'HIDDEN'
   );
 
   function handleAnimationEnd(): void {
