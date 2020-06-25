@@ -1,7 +1,5 @@
 /** Components */
 export * from './components/Modal';
-export { default as TagerNextHead } from './components/NextJS/TagerNextHead';
-export { default as TagerNextScript } from './components/NextJS/TagerNextScript';
 export { default as Page } from './components/Page';
 export { default as Preloader } from './components/Preloader';
 export * from './components/createPictureComponent';
