@@ -3,10 +3,10 @@ import styled, { css, keyframes } from 'styled-components';
 import { generateNumberArray } from '@tager/web-core';
 
 import { media } from '../../../../config/media';
-import OZiTAGLogo from '../../../../components/svg/OzitagLogo';
 
 import { SentryIssueResponse } from './ErrorDevelop.types';
 import { getErrorDetails, getFailureMessage } from './ErrorDevelop.helpers';
+import ErrorCardFooter from './components/ErrorCardFooter';
 
 type Props = {
   errorId?: string;
@@ -32,24 +32,21 @@ function ErrorDevelop({ errorId, errorCode, errorName }: Props) {
 
   const callStackLength = errorDetailsCurrent?.stacktrace.length;
   const [isCallStackCollapse, setCallStackCollapse] = useState(true);
-  const [openedStackTraceCodeLines, setOpenedStackTraceCodeLines] = useState(
-    []
-  );
+  const [openedStackTraceCodeLines, setOpenedStackTraceCodeLines] = useState<
+    Array<number>
+  >([]);
   const callStackAvailableLength = !isCallStackCollapse ? callStackLength : 3;
 
   function expandCallStack() {
     setCallStackCollapse(false);
   }
 
-  function expandViewCode(number: any) {
-    if (openedStackTraceCodeLines.indexOf(number as never) === -1) {
-      setOpenedStackTraceCodeLines([
-        ...(openedStackTraceCodeLines as never[]),
-        number as never,
-      ]);
+  function expandViewCode(index: number) {
+    if (openedStackTraceCodeLines.indexOf(index) === -1) {
+      setOpenedStackTraceCodeLines([...openedStackTraceCodeLines, index]);
     } else {
       setOpenedStackTraceCodeLines(
-        openedStackTraceCodeLines.filter((item) => item !== number)
+        openedStackTraceCodeLines.filter((item) => item !== index)
       );
     }
   }
@@ -62,10 +59,10 @@ function ErrorDevelop({ errorId, errorCode, errorName }: Props) {
       .then((response) => {
         errorDetailsRef.current = response;
 
-        setFetchingState({
-          ...fetchingState,
+        setFetchingState((prevFetchingState) => ({
+          ...prevFetchingState,
           isLoading: false,
-        });
+        }));
       })
       .catch((error) => {
         const code = error.status?.code;
@@ -77,7 +74,7 @@ function ErrorDevelop({ errorId, errorCode, errorName }: Props) {
           isLoading: false,
         });
       });
-  }, [error, errorDetailsCurrent, errorId, fetchingState]);
+  }, [error, errorDetailsCurrent, errorId]);
 
   let title, sentryUrl, file, stacktrace;
 
@@ -186,14 +183,8 @@ function ErrorDevelop({ errorId, errorCode, errorName }: Props) {
               ) : null}
             </CardInner>
           </CardScroll>
-          <ErrorFooter>
-            <FooterTager href="https://ozitag.com/tager" target="_blank">
-              Made by <span>TAGER</span>
-            </FooterTager>
-            <FooterOZiTAG href="https://ozitag.com/" target="_blank">
-              <OZiTAGLogo />
-            </FooterOZiTAG>
-          </ErrorFooter>
+
+          <ErrorCardFooter />
         </Card>
       </Inner>
     </Container>
@@ -428,43 +419,6 @@ const CallStackButton = styled.code`
 const CallStackCodeLine = styled.div<{ isActive: boolean }>`
   white-space: nowrap;
   background: ${({ isActive }) => (isActive ? '#ececec' : 'transparent')};
-`;
-
-const ErrorFooter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-  padding: 15px 20px;
-  border-top: 1px solid rgb(230, 230, 230);
-
-  ${media.mobile(css`
-    padding: 15px;
-  `)}
-`;
-
-const FooterTager = styled.a`
-  display: flex;
-  align-items: center;
-  font-size: 15px;
-  line-height: 22px;
-
-  span {
-    font-weight: 700;
-    display: inline-block;
-    margin-left: 6px;
-    letter-spacing: 0.2em;
-    font-size: 18px;
-  }
-`;
-
-const FooterOZiTAG = styled.a`
-  display: inline-block;
-  height: 36px;
-
-  svg {
-    height: 36px;
-  }
 `;
 
 export default ErrorDevelop;
