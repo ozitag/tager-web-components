@@ -9,7 +9,9 @@ type Props = {
   children?: React.ReactNode;
   title?: string;
   description?: string;
-  image?: string;
+  openGraphTitle?: string;
+  openGraphDescription?: string;
+  openGraphImage?: string;
   canonicalUrl?: string;
   datePublished?: string;
   dateModified?: string;
@@ -19,7 +21,9 @@ function Page({
   children,
   title,
   description,
-  image,
+  openGraphTitle,
+  openGraphDescription,
+  openGraphImage,
   canonicalUrl,
   datePublished,
   dateModified,
@@ -29,7 +33,9 @@ function Page({
   const metaList = getMetaList({
     title,
     description,
-    image,
+    openGraphTitle,
+    openGraphDescription,
+    openGraphImage,
     currentPath: router.asPath,
   });
   const canonicalUrlPrepared = getCanonicalUrl(router.asPath, canonicalUrl);
@@ -39,7 +45,7 @@ function Page({
     router.asPath,
     title,
     description,
-    image,
+    openGraphImage,
     datePublished,
     dateModified,
     'OZiTAG',

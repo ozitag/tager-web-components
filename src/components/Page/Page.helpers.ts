@@ -86,12 +86,16 @@ export function getLdJsonData(
 export function getMetaList({
   title,
   description,
-  image,
+  openGraphTitle,
+  openGraphDescription,
+  openGraphImage,
   currentPath,
 }: {
   title?: string;
   description?: string;
-  image?: string;
+  openGraphTitle?: string;
+  openGraphDescription?: string;
+  openGraphImage?: string;
   currentPath: string;
 }): Array<MetaHTMLAttributes<HTMLMetaElement>> {
   const currentPageUrl = getAbsoluteUrl(currentPath);
@@ -129,23 +133,23 @@ export function getMetaList({
         }
       : null,
 
-    title
+    openGraphTitle || title
       ? {
           property: 'og:title',
-          content: title,
+          content: openGraphTitle || title,
         }
       : null,
-    description
+    openGraphDescription || description
       ? {
           property: 'og:description',
-          content: description,
+          content: openGraphDescription || description,
         }
       : null,
 
-    image
+    openGraphImage
       ? {
           property: 'og:image',
-          content: getAbsoluteUrl(image),
+          content: getAbsoluteUrl(openGraphImage),
         }
       : null,
 
