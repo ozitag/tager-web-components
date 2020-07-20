@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { isBrowser, useUpdateEffect } from '@tager/web-core';
+import { isBrowser, notFalsy, useUpdateEffect } from '@tager/web-core';
 
 import { isPreloaderEnabled } from './Preloader.helpers';
 import * as S from './Preloader.style';
@@ -14,9 +14,11 @@ type PreloaderStatus = 'VISIBLE' | 'FADING_OUT' | 'HIDDEN';
 
 type Props = {
   hidden?: boolean;
+  className?: string;
+  debug?: boolean;
 };
 
-function Preloader({ hidden: hiddenProp }: Props) {
+function Preloader({ hidden: hiddenProp, className, debug }: Props) {
   const isControlled = hiddenProp !== undefined;
 
   function isInitiallyVisible(): boolean {
@@ -30,6 +32,25 @@ function Preloader({ hidden: hiddenProp }: Props) {
   const [status, setStatus] = useState<PreloaderStatus>(
     isInitiallyVisible() ? 'VISIBLE' : 'HIDDEN'
   );
+
+  useEffect(() => {
+    if (!debug) return;
+
+    console.log(
+      `%c [DEBUG Preloader]: isControlled - ${isControlled}`,
+      'color: green'
+    );
+    console.log(
+      `%c [DEBUG Preloader]: isInitiallyVisible - ${isInitiallyVisible()}`,
+      'color: green'
+    );
+  }, [debug]);
+
+  useEffect(() => {
+    if (!debug) return;
+
+    console.log(`%c [DEBUG Preloader]: status - ${status}`, 'color: green');
+  }, [debug, status]);
 
   function handleAnimationEnd(): void {
     setStatus('HIDDEN');
@@ -65,16 +86,24 @@ function Preloader({ hidden: hiddenProp }: Props) {
     return null;
   }
 
+  const containerClassName = [
+    status === 'FADING_OUT' ? 'fade-out' : undefined,
+    className,
+  ]
+    .filter(notFalsy)
+    .join(' ');
+
   return (
-    <S.Container
-      className={status === 'FADING_OUT' ? 'fade-out' : undefined}
+    <S.Overlay
+      className={containerClassName}
       onAnimationEnd={handleAnimationEnd}
+      data-preloader-overlay
     >
-      <S.Inner>
-        <S.Item />
-        <S.Item />
+      <S.Inner data-preloader>
+        <S.Item data-preloader-item />
+        <S.Item data-preloader-item />
       </S.Inner>
-    </S.Container>
+    </S.Overlay>
   );
 }
 

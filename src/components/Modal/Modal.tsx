@@ -8,15 +8,21 @@ import React, {
 import { clearAllBodyScrollLocks, disableBodyScroll } from 'body-scroll-lock';
 import { useOnKeyDown } from '@tager/web-core';
 
-import { ModalProps, OpenModalFunction, State } from './Modal.types';
+import {
+  ModalOverlayType,
+  ModalProps,
+  OpenModalFunction,
+  State,
+} from './Modal.types';
 import * as S from './Modal.style';
 import { ModalContextProvider } from './Modal.hooks';
 
 type Props = {
   children: React.ReactNode;
+  customModalOverlay?: ModalOverlayType;
 };
 
-function ModalProvider({ children }: Props) {
+function ModalProvider({ children, customModalOverlay }: Props) {
   const [state, setState] = useState<State>({});
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +37,8 @@ function ModalProvider({ children }: Props) {
   }, [isOpen]);
 
   const openModal = useCallback<OpenModalFunction>(
-    (type, props) => setState({ type, props }),
+    (...args: Parameters<OpenModalFunction>) =>
+      setState({ type: args[0], props: args[1], options: args[2] }),
     []
   );
   const closeModal = useCallback(() => setState({}), []);
@@ -57,16 +64,20 @@ function ModalProvider({ children }: Props) {
 
   const Component = state.type;
 
+  const ModalOverlay: ModalOverlayType =
+    state.options?.customModalOverlay ?? customModalOverlay ?? S.ModalOverlay;
+
   return (
     <ModalContextProvider value={openModal}>
-      <S.ModalOverlay
+      <ModalOverlay
         isOpen={isOpen}
         onClick={handleOverlayClick}
         data-testid="modal-overlay"
+        data-modal-overlay
         ref={modalRef}
       >
         {Component ? <Component {...componentProps} /> : null}
-      </S.ModalOverlay>
+      </ModalOverlay>
       {children}
     </ModalContextProvider>
   );
