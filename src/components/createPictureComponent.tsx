@@ -22,9 +22,7 @@ function Source({ srcSet, isLazy, type, ...rest }: ImageSourceProps) {
   );
 }
 
-type ImageType = {
-  imageWebp?: Array<string> | string;
-  image?: Array<string> | string;
+export type PictureImageType = {
   src?: string;
   src2x?: string;
   webp?: string;
@@ -33,7 +31,7 @@ type ImageType = {
 
 type SourceGroupProps = {
   media?: string;
-  images?: ImageType;
+  images?: PictureImageType;
   isLazy: boolean;
 };
 
@@ -74,13 +72,13 @@ function SourceGroup({ media, images, isLazy }: SourceGroupProps) {
 }
 
 type MediaImages<MediaQueryType extends string> = {
-  [key in MediaQueryType]?: ImageType;
+  [key in MediaQueryType]?: PictureImageType;
 };
 
 export type PictureProps<MediaQueryType extends string> = MediaImages<
   MediaQueryType
 > & {
-  srcSet?: ImageType;
+  srcSet?: PictureImageType;
   src?: string;
   src2x?: string;
   srcWebp?: string;
