@@ -1,13 +1,21 @@
 import { MetaHTMLAttributes } from 'react';
 
-import { getAbsoluteUrl, isNotNullish, parseUrl } from '@tager/web-core';
+import {
+  getAbsoluteUrl,
+  isNotNullish,
+  Nullish,
+  parseUrl,
+} from '@tager/web-core';
 
 /**
  * References:
  * 1. https://support.google.com/webmasters/answer/139066
  * 2. https://yoast.com/rel-canonical/
  */
-export function getCanonicalUrl(currentPath: string, canonicalPath?: string) {
+export function getCanonicalUrl(
+  currentPath: string,
+  canonicalPath?: Nullish<string>
+) {
   const absoluteUrl = getAbsoluteUrl(canonicalPath ?? currentPath);
 
   const parsedUrl = parseUrl(absoluteUrl);
@@ -20,13 +28,13 @@ export function getCanonicalUrl(currentPath: string, canonicalPath?: string) {
 
 export function getLdJsonData(
   currentPath: string,
-  title?: string,
-  description?: string,
-  image?: string,
-  datePublished?: string,
-  dateModified?: string,
-  organizationName?: string,
-  logoSrc?: string
+  title?: Nullish<string>,
+  description?: Nullish<string>,
+  image?: Nullish<string>,
+  datePublished?: Nullish<string>,
+  dateModified?: Nullish<string>,
+  organizationName?: Nullish<string>,
+  logoSrc?: Nullish<string>
 ) {
   const currentUrl = getAbsoluteUrl(currentPath);
 
@@ -91,15 +99,17 @@ export function getMetaList({
   openGraphImage,
   currentPath,
 }: {
-  title?: string;
-  description?: string;
-  openGraphTitle?: string;
-  openGraphDescription?: string;
-  openGraphImage?: string;
+  title?: Nullish<string>;
+  description?: Nullish<string>;
+  openGraphTitle?: Nullish<string>;
+  openGraphDescription?: Nullish<string>;
+  openGraphImage?: Nullish<string>;
   currentPath: string;
 }): Array<MetaHTMLAttributes<HTMLMetaElement>> {
   const currentPageUrl = getAbsoluteUrl(currentPath);
 
+  const ogTitle = openGraphTitle || title;
+  const ogDescription = openGraphDescription || description;
   return [
     /**
      * HTML Living Standard
@@ -133,16 +143,16 @@ export function getMetaList({
         }
       : null,
 
-    openGraphTitle || title
+    ogTitle
       ? {
           property: 'og:title',
-          content: openGraphTitle || title,
+          content: ogTitle,
         }
       : null,
-    openGraphDescription || description
+    ogDescription
       ? {
           property: 'og:description',
-          content: openGraphDescription || description,
+          content: ogDescription,
         }
       : null,
 

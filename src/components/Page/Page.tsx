@@ -1,20 +1,20 @@
 import React from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { getOrigin } from '@tager/web-core';
+import { getOrigin, Nullish } from '@tager/web-core';
 
 import { getMetaList, getCanonicalUrl, getLdJsonData } from './Page.helpers';
 
 type Props = {
   children?: React.ReactNode;
-  title?: string;
-  description?: string;
-  openGraphTitle?: string;
-  openGraphDescription?: string;
-  openGraphImage?: string;
-  canonicalUrl?: string;
-  datePublished?: string;
-  dateModified?: string;
+  title?: Nullish<string>;
+  description?: Nullish<string>;
+  openGraphTitle?: Nullish<string>;
+  openGraphDescription?: Nullish<string>;
+  openGraphImage?: Nullish<string>;
+  canonicalUrl?: Nullish<string>;
+  datePublished?: Nullish<string>;
+  dateModified?: Nullish<string>;
 };
 
 function Page({

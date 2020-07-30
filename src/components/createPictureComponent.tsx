@@ -1,5 +1,5 @@
 import React from 'react';
-import { convertSrcSet, getImageTypeFromUrl } from '@tager/web-core';
+import { convertSrcSet, getImageTypeFromUrl, Nullish } from '@tager/web-core';
 
 import Image from './Image';
 
@@ -23,10 +23,10 @@ function Source({ srcSet, isLazy, type, ...rest }: ImageSourceProps) {
 }
 
 export type PictureImageType = {
-  src?: string;
-  src2x?: string;
-  webp?: string;
-  webp2x?: string;
+  src?: Nullish<string>;
+  src2x?: Nullish<string>;
+  webp?: Nullish<string>;
+  webp2x?: Nullish<string>;
 };
 
 type SourceGroupProps = {
@@ -79,10 +79,10 @@ export type PictureProps<MediaQueryType extends string> = MediaImages<
   MediaQueryType
 > & {
   srcSet?: PictureImageType;
-  src?: string;
-  src2x?: string;
-  srcWebp?: string;
-  srcWebp2x?: string;
+  src?: Nullish<string>;
+  src2x?: Nullish<string>;
+  srcWebp?: Nullish<string>;
+  srcWebp2x?: Nullish<string>;
   alt?: string;
   className?: string;
   loading?: 'eager' | 'lazy';
@@ -133,7 +133,7 @@ export function createPictureComponent<MediaQueryType extends string>({
           />
         ) : null}
         <Image
-          src={src}
+          src={src ?? undefined}
           srcSet={src2x ? `${src2x} 2x` : undefined}
           loading={loading}
           alt={alt}

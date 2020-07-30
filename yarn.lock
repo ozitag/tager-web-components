@@ -1395,16 +1395,18 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@tager/web-core@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@tager/web-core/-/web-core-0.1.2.tgz#fa8f81ecfe74b7c1d24602079e68378ff40d28a3"
-  integrity sha512-7yP2RWCVG52MRiZo4fu4uX73raGtksiCpm/4X3aEoHkE3gKQj6C1tD1mloirjtrvAs7XlrkbuuOB+9romr+LJA==
+"@tager/web-core@0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@tager/web-core/-/web-core-0.1.6.tgz#43425ea3e4d5ff99b8f1d868f04715761048bbaa"
+  integrity sha512-fDtWtq+Cz1ly5fT9sf7deCabhXv/1/w3GVtjkMfKEbU+jDxNDyuJoB7dqFxae3Ko8j32sR7ghqawo3SsCA6yRA==
   dependencies:
     cookie "^0.4.1"
     js-cookie "^3.0.0-rc.0"
-    lodash "^4.17.15"
+    lodash "^4.17.19"
     lodash-es "^4.17.15"
-    react-ga "^3.0.0"
+    nprogress "^0.2.0"
+    react-ga "^3.1.2"
+    react-gtm-module "^2.0.10"
 
 "@types/babel__core@^7.1.0":
   version "7.1.9"
@@ -5782,6 +5784,11 @@ lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
+lodash@^4.17.19:
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
+
 log-symbols@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/log-symbols/-/log-symbols-2.2.0.tgz#5740e1c5d6f0dfda4ad9323b5332107ef6b4c40a"
@@ -6315,6 +6322,11 @@ npm-run-path@^4.0.0:
   integrity sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==
   dependencies:
     path-key "^3.0.0"
+
+nprogress@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/nprogress/-/nprogress-0.2.0.tgz#cb8f34c53213d895723fcbab907e9422adbcafb1"
+  integrity sha1-y480xTIT2JVyP8urkH6UIq28r7E=
 
 nth-check@^1.0.2:
   version "1.0.2"
@@ -7342,10 +7354,15 @@ react-dom@^16.13.1:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
-react-ga@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-3.0.0.tgz#4d665389cf0c489c36c5fdf97722a7e53efdfc5b"
-  integrity sha512-IKqqCtSMe0IfSRNvbHAiwXwIXbuza4VvHvB/2N3hEiMFGSjv8fNI6obPH6bkDdIjDpwzbUqKs8895OxBckWJ2g==
+react-ga@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-3.1.2.tgz#e13f211c51a2e5c401ea69cf094b9501fe3c51ce"
+  integrity sha512-OJrMqaHEHbodm+XsnjA6ISBEHTwvpFrxco65mctzl/v3CASMSLSyUkFqz9yYrPDKGBUfNQzKCjuMJwctjlWBbw==
+
+react-gtm-module@^2.0.10:
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/react-gtm-module/-/react-gtm-module-2.0.10.tgz#462296c3d622b82413d0917d430bec557a586237"
+  integrity sha512-7fRxphVxbJVCNWDQyegugZOrOw97vqwzbTSZlHM2n+otg2iBQvKa0SzFxwcLi9monXADjWGX6xQER6IOl75FPw==
 
 react-is@16.13.1, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4:
   version "16.13.1"
