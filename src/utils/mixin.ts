@@ -2,13 +2,12 @@ import { css, keyframes } from 'styled-components';
 
 import { CssSnippet } from '../typings/common';
 
-export function createMediaMixin({
-  min,
-  max,
-}: {
+export type MediaQueryParams = {
   min?: number;
   max?: number;
-}): (snippet: CssSnippet) => CssSnippet {
+};
+
+export function createMediaQuery({ min, max }: MediaQueryParams): string {
   if (!min && !max && process.env.NODE_ENV === 'development') {
     throw new Error(
       'You didn\'t specify "min" or "max" width for @media mixin'
@@ -27,16 +26,22 @@ export function createMediaMixin({
    * Reference: "Using “min-” and “max-” Prefixes On Range Features"
    * https://www.w3.org/TR/mediaqueries-4/#mq-min-max
    */
-  const media =
-    min && max
-      ? `@media (min-width: ${min}px) and (max-width: ${max - 0.02}px)`
-      : min && !max
-      ? `@media (min-width: ${min}px)`
-      : !min && max
-      ? `@media (max-width: ${max - 0.02}px)`
-      : null;
+  return min && max
+    ? `(min-width: ${min}px) and (max-width: ${max - 0.02}px)`
+    : min
+    ? `(min-width: ${min}px)`
+    : max
+    ? `(max-width: ${max - 0.02}px)`
+    : '';
+}
+
+export function createMediaMixin(
+  params: MediaQueryParams
+): (snippet: CssSnippet) => CssSnippet {
+  const mediaQuery = createMediaQuery(params);
+
   return (styles) => css`
-    ${media} {
+    @media ${mediaQuery} {
       ${styles};
     }
   `;

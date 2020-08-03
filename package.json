@@ -1,6 +1,6 @@
 {
   "name": "@tager/web-components",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "author": "Ivan Saranchonkau",
   "license": "MIT",
   "main": "dist/index.js",
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "cross-env NODE_ENV=production tsdx build --format=cjs,esm,umd --entry ./src/main.tsx",
+    "build": "cross-env NODE_ENV=production tsdx build --format=cjs,esm --entry ./src/main.tsx",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
     "prebuild": "rimraf dist",
