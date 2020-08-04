@@ -16,3 +16,4 @@ export * from './typings/common';
 
 /** Utils */
 export * from './utils/mixin';
+export * from './utils/linkBuilder';

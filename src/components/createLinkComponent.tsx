@@ -7,12 +7,17 @@ import React, {
 import styled from 'styled-components';
 import { NextRouter, useRouter } from 'next/router';
 import NextLinkComponent, { LinkProps } from 'next/link';
+import { isNotNullish, Nullish } from '@tager/web-core';
 
-function isLinkActive(to: Props['to'], router: NextRouter): boolean {
+export type LinkToPropType = Nullish<
+  string | { href: LinkProps['href']; as: LinkProps['as'] }
+>;
+
+function isLinkActive(to: LinkToPropType, router: NextRouter): boolean {
   if (typeof to === 'string') {
     return to === router.pathname;
   } else {
-    return to.as === router.asPath;
+    return to?.as === router.asPath;
   }
 }
 
@@ -29,10 +34,10 @@ export type CustomLinkProps = Omit<
 
 type CustomLinkRenderFunction = (props: CustomLinkProps) => React.ReactNode;
 
-type Props = React.AnchorHTMLAttributes<HTMLAnchorElement> &
+export type TagerLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> &
   Omit<LinkProps, 'href' | 'as'> & {
     /** allow both static and dynamic routes */
-    to: string | { href: LinkProps['href']; as: LinkProps['as'] };
+    to: Nullish<string | { href: LinkProps['href']; as: LinkProps['as'] }>;
     as?: React.ElementType;
     children?: CustomLinkRenderFunction | React.ReactNode;
     className?: string;
@@ -42,7 +47,7 @@ type Props = React.AnchorHTMLAttributes<HTMLAnchorElement> &
   };
 
 function isRenderFunction(
-  children: Props['children']
+  children: TagerLinkProps['children']
 ): children is CustomLinkRenderFunction {
   return typeof children === 'function';
 }
@@ -52,6 +57,8 @@ const DefaultLinkComponent = styled.a<CustomLinkProps>`
     props.isActive || props.disabled ? 'default' : 'pointer'};
 `;
 
+export type LinkConverterType = (link: LinkToPropType) => LinkToPropType;
+
 /**
  * Source: https://blog.logrocket.com/dealing-with-links-in-next-js/
  */
@@ -59,9 +66,10 @@ export function createLinkComponent(
   options: {
     nextLinkComponent?: React.ComponentType<LinkProps>;
     uiLinkComponent?: React.ElementType<CustomLinkProps>;
+    converter?: LinkConverterType;
   } = {}
 ): ForwardRefExoticComponent<
-  PropsWithoutRef<Props> & RefAttributes<HTMLAnchorElement>
+  PropsWithoutRef<TagerLinkProps> & RefAttributes<HTMLAnchorElement>
 > {
   const {
     nextLinkComponent: NextLink = NextLinkComponent,
@@ -83,11 +91,16 @@ export function createLinkComponent(
         disabled,
         children,
         ...restLinkProps
-      }: Props,
+      }: TagerLinkProps,
       ref: React.Ref<HTMLAnchorElement>
     ) => {
       /** router is null in Storybook environment */
       const router = useRouter() as ReturnType<typeof useRouter> | null;
+
+      const convertedTo = useMemo(
+        () => (options.converter ? options.converter(to) : to),
+        [to]
+      );
 
       const isActive = useMemo(() => {
         if (!router) return false;
@@ -97,16 +110,17 @@ export function createLinkComponent(
         } else if (typeof isActiveProp === 'boolean') {
           return isActiveProp;
         } else {
-          return isLinkActive(to, router);
+          return isLinkActive(convertedTo, router);
         }
-      }, [isActiveProp, router, to]);
+      }, [isActiveProp, router, convertedTo]);
 
       const linkClassName = [isActive ? activeClassName : null, className]
         .filter(Boolean)
         .join(' ');
 
       function onClick(event: React.MouseEvent) {
-        const path = typeof to === 'string' ? to : to.as;
+        const path =
+          typeof convertedTo === 'string' ? convertedTo : convertedTo?.as;
 
         if (!router || router.asPath === path || disabled) {
           event.preventDefault();
@@ -131,7 +145,10 @@ export function createLinkComponent(
         }
       }
 
-      const route = typeof to === 'string' ? { href: to } : to;
+      const route =
+        isNotNullish(convertedTo) && typeof convertedTo === 'object'
+          ? convertedTo
+          : { href: convertedTo ?? '' };
 
       /** otherwise pass both "href" / "as" */
       return (
