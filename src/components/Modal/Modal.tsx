@@ -5,8 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { clearAllBodyScrollLocks, disableBodyScroll } from 'body-scroll-lock';
-import { useOnKeyDown } from '@tager/web-core';
+import { scroller, useOnKeyDown } from '@tager/web-core';
 
 import {
   ModalOverlayType,
@@ -24,16 +23,18 @@ type Props = {
 
 function ModalProvider({ children, customModalOverlay }: Props) {
   const [state, setState] = useState<State>({});
-  const modalRef = useRef<HTMLDivElement>(null);
+  const modalOverlayRef = useRef<HTMLDivElement>(null);
 
   const isOpen = Boolean(state.type);
 
   useEffect(() => {
-    if (isOpen && modalRef.current) {
-      disableBodyScroll(modalRef.current);
+    const modalOverlayElement = modalOverlayRef.current;
+
+    if (isOpen) {
+      scroller.lock(modalOverlayElement);
     }
 
-    return () => clearAllBodyScrollLocks();
+    return () => scroller.unlockAll();
   }, [isOpen]);
 
   const openModal = useCallback<OpenModalFunction>(
@@ -74,7 +75,7 @@ function ModalProvider({ children, customModalOverlay }: Props) {
         onClick={handleOverlayClick}
         data-testid="modal-overlay"
         data-modal-overlay
-        ref={modalRef}
+        ref={modalOverlayRef}
       >
         {Component ? <Component {...componentProps} /> : null}
       </ModalOverlay>

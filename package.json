@@ -1,6 +1,6 @@
 {
   "name": "@tager/web-components",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "author": "Ivan Saranchonkau",
   "license": "MIT",
   "main": "dist/index.js",
@@ -21,29 +21,26 @@
     "prebuild": "rimraf dist",
     "prepare": "npm run build"
   },
-  "dependencies": {
-    "body-scroll-lock": "^3.0.3"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@tager/web-core": "^0.1.9",
-    "@types/body-scroll-lock": "^2.6.1",
-    "@types/react": "^16.9.44",
+    "@tager/web-core": "^0.2.4",
+    "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
-    "@types/styled-components": "^5.1.2",
+    "@types/styled-components": "^5.1.3",
     "cross-env": "^7.0.2",
-    "husky": "^4.2.5",
-    "next": "^9.5.1",
-    "prettier": "^2.0.5",
+    "husky": "^4.3.0",
+    "next": "^9.5.3",
+    "prettier": "^2.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "rimraf": "^3.0.2",
-    "styled-components": "^5.1.1",
-    "tsdx": "^0.13.2",
-    "tslib": "^2.0.0",
-    "typescript": "^3.9.7"
+    "styled-components": "^5.2.0",
+    "tsdx": "^0.13.3",
+    "tslib": "^2.0.1",
+    "typescript": "^4.0.2"
   },
   "peerDependencies": {
-    "@tager/web-core": ">=0.1.9",
+    "@tager/web-core": ">=0.2.4",
     "next": "^9.5.1",
     "react": "^16.13.1",
     "styled-components": "^5.1.1"
