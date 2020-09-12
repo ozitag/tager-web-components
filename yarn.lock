@@ -2016,18 +2016,16 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@tager/web-core@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@tager/web-core/-/web-core-0.2.4.tgz#fae1994aeb25b6a36e64ba5d5bfea989cbdc386c"
-  integrity sha512-6W2M16fCzuc7LO6bxqvPKgBle+0r9xGSc59wyfA2bdyHFSgtvE+0m/oa564l3IwYd8oKl7/rbg6kzHgsM4ulRQ==
+"@tager/web-core@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@tager/web-core/-/web-core-0.3.0.tgz#0851c940505fb28e4eb3ff4dadcb5cea4b01d1d8"
+  integrity sha512-/vmJ01nTvXUhSRFSVjLWPP6HwMCclKUyE3EjcOjZJm0nM2mxQcOoExmTYeIyFLXcPJwSRvq1/cdFroHg/qhjYQ==
   dependencies:
     cookie "^0.4.1"
     js-cookie "^3.0.0-rc.0"
     lodash "^4.17.20"
     lodash-es "^4.17.15"
     nprogress "^0.2.0"
-    react-ga "^3.1.2"
-    react-gtm-module "^2.0.10"
     tua-body-scroll-lock "^1.2.0"
     typed-contracts "^2.3.0"
 
@@ -7489,16 +7487,6 @@ react-dom@^16.13.1:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.19.1"
-
-react-ga@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-3.1.2.tgz#e13f211c51a2e5c401ea69cf094b9501fe3c51ce"
-  integrity sha512-OJrMqaHEHbodm+XsnjA6ISBEHTwvpFrxco65mctzl/v3CASMSLSyUkFqz9yYrPDKGBUfNQzKCjuMJwctjlWBbw==
-
-react-gtm-module@^2.0.10:
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/react-gtm-module/-/react-gtm-module-2.0.10.tgz#462296c3d622b82413d0917d430bec557a586237"
-  integrity sha512-7fRxphVxbJVCNWDQyegugZOrOw97vqwzbTSZlHM2n+otg2iBQvKa0SzFxwcLi9monXADjWGX6xQER6IOl75FPw==
 
 react-is@16.13.1, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4:
   version "16.13.1"
