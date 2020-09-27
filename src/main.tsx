@@ -1,4 +1,6 @@
 /** Components */
+export { default as TagerNextScript } from './components/next/TagerNextScript';
+export { default as TagerNextHead } from './components/next/TagerNextHead';
 export * from './components/Modal';
 export { default as Page } from './components/Page';
 export { default as Preloader } from './components/Preloader';
