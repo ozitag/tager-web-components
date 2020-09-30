@@ -180,16 +180,22 @@ export function getMetaList({
       name: 'twitter:creator',
       content: 'OZiTAG, ozitag.com',
     },
-    title
+    ogTitle
       ? {
           name: 'twitter:title',
-          content: title,
+          content: ogTitle,
         }
       : null,
-    description
+    ogDescription
       ? {
           name: 'twitter:description',
-          content: description,
+          content: ogDescription,
+        }
+      : null,
+    openGraphImage
+      ? {
+          name: 'twitter:image',
+          content: getAbsoluteUrl(openGraphImage),
         }
       : null,
   ].filter(isNotNullish);

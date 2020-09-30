@@ -9,9 +9,7 @@ import { NextRouter, useRouter } from 'next/router';
 import NextLinkComponent, { LinkProps } from 'next/link';
 import { isNotNullish, Nullish } from '@tager/web-core';
 
-export type LinkToPropType = Nullish<
-  string | { href: LinkProps['href']; as: LinkProps['as'] }
->;
+export type LinkToPropType = Nullish<string | Pick<LinkProps, 'href' | 'as'>>;
 
 function isLinkActive(to: LinkToPropType, router: NextRouter): boolean {
   if (typeof to === 'string') {
@@ -37,7 +35,7 @@ type CustomLinkRenderFunction = (props: CustomLinkProps) => React.ReactNode;
 export type TagerLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> &
   Omit<LinkProps, 'href' | 'as'> & {
     /** allow both static and dynamic routes */
-    to: Nullish<string | { href: LinkProps['href']; as: LinkProps['as'] }>;
+    to: LinkToPropType;
     as?: React.ElementType;
     children?: CustomLinkRenderFunction | React.ReactNode;
     className?: string;
