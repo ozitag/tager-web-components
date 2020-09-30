@@ -7,6 +7,7 @@ import React, {
 import styled from 'styled-components';
 import { NextRouter, useRouter } from 'next/router';
 import NextLinkComponent, { LinkProps } from 'next/link';
+
 import { isNotNullish, Nullish } from '@tager/web-core';
 
 export type LinkToPropType = Nullish<string | Pick<LinkProps, 'href' | 'as'>>;

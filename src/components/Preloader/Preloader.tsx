@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import { isBrowser, notFalsy, useUpdateEffect } from '@tager/web-core';
 
 import { isPreloaderEnabled } from './Preloader.helpers';
@@ -60,7 +61,7 @@ function Preloader({ hidden: hiddenProp, className, debug }: Props) {
     if (isControlled) {
       setStatus(hiddenProp ? 'FADING_OUT' : 'VISIBLE');
     }
-  }, [hiddenProp]);
+  }, [hiddenProp, isControlled]);
 
   useEffect(() => {
     if (isControlled || status !== 'VISIBLE') return;
@@ -80,7 +81,7 @@ function Preloader({ hidden: hiddenProp, className, debug }: Props) {
     return () => {
       document.removeEventListener('DOMContentLoaded', hidePreloader);
     };
-  }, []);
+  }, [isControlled]);
 
   if (status === 'HIDDEN') {
     return null;

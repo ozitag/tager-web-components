@@ -1,10 +1,12 @@
 import { UrlObject } from 'url';
+
 import {
   getRouteMatcher,
   getRouteRegex,
   isDynamicRoute,
 } from 'next/dist/next-server/lib/router/utils';
 import escapePathDelimiters from 'next/dist/next-server/lib/router/utils/escape-path-delimiters';
+
 import { Nullable } from '@tager/web-core';
 
 import {
