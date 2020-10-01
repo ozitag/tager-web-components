@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+
 import { getOrigin, Nullish } from '@tager/web-core';
 
 import { getMetaList, getCanonicalUrl, getLdJsonData } from './Page.helpers';

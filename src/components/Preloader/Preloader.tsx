@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import { isBrowser, notFalsy, useUpdateEffect } from '@tager/web-core';
 
 import { isPreloaderEnabled } from './Preloader.helpers';

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-import OZiTAGLogo from '../../../../../components/svg/OzitagLogo';
+import { ReactComponent as OZiTAGLogo } from '../../../../../assets/svg/ozitag-logo.svg';
 import { media } from '../../../../../config/media';
 
 function ErrorCardFooter() {
