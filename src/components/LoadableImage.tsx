@@ -9,11 +9,15 @@ type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
   spinnerProps?: Partial<React.ComponentProps<typeof Spinner>>;
 };
 
-function LoadableImage(props: Props) {
+function LoadableImage({
+  spinnerProps,
+  spinnerContainerStyle,
+  ...imageProps
+}: Props) {
   const [status, setStatus] = useState<FetchStatus>(FETCH_STATUSES.LOADING);
 
   useEffect(() => {
-    if (!props.src) return;
+    if (!imageProps.src) return;
 
     const image = new Image();
 
@@ -25,24 +29,24 @@ function LoadableImage(props: Props) {
       setStatus(FETCH_STATUSES.FAILURE);
     });
 
-    image.src = props.src;
-  }, [props.src]);
+    image.src = imageProps.src;
+  }, [imageProps.src]);
 
   if (status === FETCH_STATUSES.LOADING) {
     return (
-      <div style={props.spinnerContainerStyle}>
-        <Spinner {...props.spinnerProps} show />
+      <div style={spinnerContainerStyle}>
+        <Spinner {...spinnerProps} show />
       </div>
     );
   }
 
   if (status === FETCH_STATUSES.SUCCESS) {
-    return <img {...props} />;
+    return <img {...imageProps} />;
   }
 
   return (
-    <div style={props.spinnerContainerStyle}>
-      <img {...props} alt={props.alt || 'Loading error'} />
+    <div style={spinnerContainerStyle}>
+      <img {...imageProps} alt={imageProps.alt || 'Loading error'} />
     </div>
   );
 }
