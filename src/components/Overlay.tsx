@@ -3,12 +3,12 @@ import styled from 'styled-components';
 
 import { scroller } from '@tager/web-core';
 
-type Props = {
+export type OverlayProps = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
   onClose: () => void;
 };
 
-function Overlay(props: Props) {
+function Overlay({ onClose, children, ...rest }: OverlayProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,15 +18,15 @@ function Overlay(props: Props) {
   }, []);
 
   function handleClick(event: React.MouseEvent<HTMLDivElement>) {
-    /** if gallery is open and click occurs on overlay */
+    /** if click occurs on overlay */
     if (event.target === event.currentTarget) {
-      props.onClose();
+      onClose();
     }
   }
 
   return (
-    <Container ref={ref} onClick={handleClick}>
-      {props.children}
+    <Container ref={ref} onClick={handleClick} {...rest}>
+      {children}
     </Container>
   );
 }

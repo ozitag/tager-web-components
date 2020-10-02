@@ -1,7 +1,7 @@
 /** Components */
 export { default as TagerNextScript } from './components/next/TagerNextScript';
 export { default as TagerNextHead } from './components/next/TagerNextHead';
-export * from './components/Modal';
+export * from './components/ModalProvider';
 export * from './components/Gallery';
 export { default as Spinner } from './components/Spinner';
 export { default as LoadableImage } from './components/LoadableImage';

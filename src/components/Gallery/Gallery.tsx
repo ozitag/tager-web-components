@@ -9,9 +9,9 @@ import { ReactComponent as CloseIcon } from '../../assets/svg/close.svg';
 import { getDisplayedPageNumbers } from '../../utils/common';
 import { createMediaQuery } from '../../utils/mixin';
 import LoadableImage from '../LoadableImage';
+import Overlay from '../Overlay';
 
 import { GalleryOptions } from './Gallery.types';
-import Overlay from './components/Overlay';
 
 type Props = {
   options: GalleryOptions;
