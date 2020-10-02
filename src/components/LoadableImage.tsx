@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 
 import { FETCH_STATUSES, FetchStatus } from '@tager/web-core';
 
 import Spinner from './Spinner';
 
-type Props = React.ImgHTMLAttributes<HTMLImageElement>;
+type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
+  spinnerContainerStyle?: CSSProperties;
+  spinnerProps?: Partial<React.ComponentProps<typeof Spinner>>;
+};
 
 function LoadableImage(props: Props) {
   const [status, setStatus] = useState<FetchStatus>(FETCH_STATUSES.LOADING);
@@ -26,14 +29,22 @@ function LoadableImage(props: Props) {
   }, [props.src]);
 
   if (status === FETCH_STATUSES.LOADING) {
-    return <Spinner show />;
+    return (
+      <div style={props.spinnerContainerStyle}>
+        <Spinner {...props.spinnerProps} show />
+      </div>
+    );
   }
 
   if (status === FETCH_STATUSES.SUCCESS) {
     return <img {...props} />;
   }
 
-  return null;
+  return (
+    <div style={props.spinnerContainerStyle}>
+      <img {...props} alt={props.alt || 'Loading error'} />
+    </div>
+  );
 }
 
 export default LoadableImage;

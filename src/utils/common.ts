@@ -14,8 +14,9 @@ export function getDisplayedPageNumbers({
     if (pageNumbers.length < maxButtonCount) {
       pageNumbers.push(i);
     } else {
+      /** currentPageIndex - index of current page in result page number list */
       const currentPageIndex = pageNumbers.indexOf(currentPageNumber);
-      if (currentPageNumber > halfCount && currentPageIndex !== halfCount) {
+      if (currentPageIndex + 1 > halfCount || currentPageIndex === -1) {
         pageNumbers.shift();
         pageNumbers.push(i);
       }

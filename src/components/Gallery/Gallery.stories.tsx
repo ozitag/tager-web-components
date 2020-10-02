@@ -50,6 +50,11 @@ GalleryDefault.args = {
   imageList: [
     {
       url:
+        'https://belmebel.dev.ozitag.com/uploads/payment-page/2j/ev/2jEvIOkhtQ_1900_1000.png',
+      caption: 'Образец товарного чека',
+    },
+    {
+      url:
         'https://belmebel.by/uploads/products/cf/aw/Cfaw2MP27W1id6JRPHK1NYbFye1QB6tT.jpg',
     },
     {

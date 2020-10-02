@@ -1,15 +1,19 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { Keyframes, keyframes } from 'styled-components';
 
 type Props = {
   show: boolean;
+  size?: number;
+  thickness?: number;
 };
 
 function Spinner(props: Props) {
+  const size = props.size ?? 100;
+  const thickness = props.thickness ?? 4;
   return (
     <Container visible={Boolean(props.show)}>
-      <Inner>
-        <Circle />
+      <Inner size={size}>
+        <Circle thickness={thickness} />
       </Inner>
     </Container>
   );
@@ -25,19 +29,20 @@ const Container = styled.div<{ visible: boolean }>`
   transition: opacity 0.3s;
 `;
 
-const Inner = styled.div`
+const Inner = styled.div<{ size: number }>`
   display: inline-block;
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: ${(props) => props.size}px;
+  height: ${(props) => props.size}px;
 `;
 
-const animation = keyframes`
+function getAnimation(props: { thickness: number }): Keyframes {
+  return keyframes`
   from {
       top: 50%;
       left: 50%;
-      width: 0;
-      height: 0;
+      width: ${props.thickness * 2}px;
+      height: ${props.thickness * 2}px;
       opacity: 1;
   }
   
@@ -49,13 +54,15 @@ const animation = keyframes`
       opacity: 0;
   }
 `;
+}
 
-const Circle = styled.div`
+const Circle = styled.div<{ thickness: number }>`
   position: absolute;
-  border: 4px solid white;
+
+  border: ${(props) => props.thickness}px solid white;
   opacity: 1;
   border-radius: 50%;
-  animation-name: ${animation};
+  animation-name: ${(props) => getAnimation({ thickness: props.thickness })};
   animation-duration: 1s;
   animation-timing-function: cubic-bezier(0, 0.2, 0.8, 1);
   animation-iteration-count: infinite;
