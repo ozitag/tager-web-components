@@ -24,7 +24,7 @@ class TagerNextScript extends NextScript {
       : [];
 
     function isChunk(scriptSrc: string | undefined): boolean {
-      return scriptSrc ? scriptSrc.includes('chunk') : false;
+      return scriptSrc ? scriptSrc.includes('static/chunks') : false;
     }
 
     const mainScripts = allScripts.filter(
