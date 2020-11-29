@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import styled, { css, keyframes } from 'styled-components';
 
 import { convertSrcSet, getImageTypeFromUrl, Nullish } from '@tager/web-core';
 
@@ -15,7 +16,7 @@ type ImageSourceProps = Omit<
 function Source({ srcSet, isLazy, type, ...rest }: ImageSourceProps) {
   return (
     <source
-      srcSet={!isLazy ? convertSrcSet(srcSet) : undefined}
+      srcSet={isLazy ? undefined : convertSrcSet(srcSet)}
       data-srcset={isLazy ? convertSrcSet(srcSet) : undefined}
       type={type ?? getImageTypeFromUrl(srcSet[0]) ?? undefined}
       {...rest}
@@ -87,6 +88,7 @@ export type PictureProps<MediaQueryType extends string> = MediaImages<
   alt?: string;
   className?: string;
   loading?: 'eager' | 'lazy';
+  showSpinner?: boolean;
 };
 
 export function createPictureComponent<MediaQueryType extends string>({
@@ -102,10 +104,34 @@ export function createPictureComponent<MediaQueryType extends string>({
     alt,
     className,
     loading,
+    showSpinner,
     ...rest
   }: PictureProps<MediaQueryType>) {
     const isLazy = loading === 'lazy';
 
+    const [isSpinnerVisible, setSpinnerVisible] = useState<boolean>(false);
+    const imageRef = useRef<HTMLImageElement>(null);
+
+    useEffect(() => {
+      if (!showSpinner || !imageRef.current) return;
+
+      const image = imageRef.current;
+
+      console.log('image.complete', image.complete);
+      if (image.complete) return;
+
+      setSpinnerVisible(true);
+
+      image.addEventListener('load', () => {
+        setSpinnerVisible(false);
+      });
+
+      image.addEventListener('error', () => {
+        setSpinnerVisible(false);
+      });
+    }, []);
+
+    console.log('isSpinnerVisible', isSpinnerVisible);
     return (
       <picture className={className}>
         {Object.keys(mediaQueryMap).map((key) => {
@@ -133,11 +159,13 @@ export function createPictureComponent<MediaQueryType extends string>({
             isLazy={isLazy}
           />
         ) : null}
-        <Image
+        <StyledImage
+          showSpinner={true}
           src={src ?? undefined}
           srcSet={src2x ? `${src2x} 2x` : undefined}
           loading={loading}
           alt={alt}
+          ref={imageRef}
         />
       </picture>
     );
@@ -147,3 +175,39 @@ export function createPictureComponent<MediaQueryType extends string>({
 
   return Picture;
 }
+
+const rotateAnimation = keyframes`
+  0% {
+    transform: rotate(0)
+  }
+
+  to {
+    transform: rotate(360deg)
+  }
+`;
+
+const StyledImage = styled(Image).withConfig({
+  shouldForwardProp: (prop) => (prop as string) !== 'showSpinner',
+})<{ showSpinner: boolean }>`
+  ${(props) =>
+    props.showSpinner
+      ? css`
+          opacity: 0;
+
+          &:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            top: calc(50% - 15px);
+            left: calc(50% - 15px);
+            z-index: 9;
+            display: block;
+            border: 3px solid #ffc600;
+            border-top-color: transparent;
+            animation: ${rotateAnimation} 0.35s linear infinite;
+          }
+        `
+      : ''}
+`;

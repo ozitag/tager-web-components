@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
 /**
  * Placeholder fixes broken image symbol: https://github.com/aFarkas/lazysizes#broken-image-symbol
@@ -14,31 +14,34 @@ import React, { useRef } from 'react';
  * the browser waits until the new image is loaded, then replaces the image.
  * That what we do when images are loaded lazily.
  */
-const PLACEHOLDER =
-  'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+// const PLACEHOLDER =
+//   'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
-type Props = React.ImgHTMLAttributes<HTMLImageElement>;
+interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
 
-function Image({ className, src, srcSet, loading = 'eager', ...rest }: Props) {
-  const imageRef = useRef<HTMLImageElement>(null);
+const Image = React.forwardRef<HTMLImageElement, ImageProps>(
+  function ImageWithRef(
+    { className, src, srcSet, loading = 'eager', ...rest },
+    ref
+  ) {
+    const isLazy = loading === 'lazy';
 
-  const isLazy = loading === 'lazy';
-
-  const imgClassName = [className, isLazy ? 'lazyload' : null]
-    .filter(Boolean)
-    .join(' ');
-  return (
-    <img
-      className={imgClassName}
-      ref={imageRef}
-      src={isLazy ? PLACEHOLDER : src}
-      srcSet={isLazy ? undefined : srcSet}
-      data-src={src}
-      data-srcset={srcSet}
-      alt=""
-      {...rest}
-    />
-  );
-}
+    const imgClassName = [className, isLazy ? 'lazyload' : null]
+      .filter(Boolean)
+      .join(' ');
+    return (
+      <img
+        className={imgClassName}
+        ref={ref}
+        src={isLazy ? undefined : src}
+        srcSet={isLazy ? undefined : srcSet}
+        data-src={src}
+        data-srcset={srcSet}
+        alt=""
+        {...rest}
+      />
+    );
+  }
+);
 
 export default Image;
