@@ -1,41 +1,40 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import React from 'react';
 
 import { convertSrcSet, getImageTypeFromUrl, Nullish } from '@tager/web-core';
 
+import { createMediaQuery } from '../utils/mixin';
+
 import Image from './Image';
 
-type ImageSourceProps = Omit<
-  React.SourceHTMLAttributes<HTMLSourceElement>,
-  'srcSet'
-> & {
-  srcSet: Array<string>;
+interface ImageSourceProps
+  extends React.SourceHTMLAttributes<HTMLSourceElement> {
+  srcList: Array<string>;
   isLazy: boolean;
-};
+}
 
-function Source({ srcSet, isLazy, type, ...rest }: ImageSourceProps) {
+function Source({ srcList, isLazy, type, srcSet, ...rest }: ImageSourceProps) {
   return (
     <source
-      srcSet={isLazy ? undefined : convertSrcSet(srcSet)}
-      data-srcset={isLazy ? convertSrcSet(srcSet) : undefined}
-      type={type ?? getImageTypeFromUrl(srcSet[0]) ?? undefined}
+      srcSet={isLazy ? undefined : convertSrcSet(srcList)}
+      data-srcset={isLazy ? convertSrcSet(srcList) : undefined}
+      type={type ?? getImageTypeFromUrl(srcList[0]) ?? undefined}
       {...rest}
     />
   );
 }
 
-export type PictureImageType = {
+export interface PictureImageType {
   src?: Nullish<string>;
   src2x?: Nullish<string>;
   webp?: Nullish<string>;
   webp2x?: Nullish<string>;
-};
+}
 
-type SourceGroupProps = {
+interface SourceGroupProps {
   media?: string;
   images?: PictureImageType;
   isLazy: boolean;
-};
+}
 
 function SourceGroup({ media, images, isLazy }: SourceGroupProps) {
   if (!images) return null;
@@ -51,7 +50,7 @@ function SourceGroup({ media, images, isLazy }: SourceGroupProps) {
       {webp && webp2x ? (
         <Source
           isLazy={isLazy}
-          srcSet={[webp, webp2x]}
+          srcList={[webp, webp2x]}
           type="image/webp"
           media={media}
         />
@@ -59,15 +58,15 @@ function SourceGroup({ media, images, isLazy }: SourceGroupProps) {
         <Source
           isLazy={isLazy}
           type="image/webp"
-          srcSet={[webp]}
+          srcList={[webp]}
           media={media}
         />
       ) : null}
 
       {src && src2x ? (
-        <Source isLazy={isLazy} srcSet={[src, src2x]} media={media} />
+        <Source isLazy={isLazy} srcList={[src, src2x]} media={media} />
       ) : src ? (
-        <Source isLazy={isLazy} srcSet={[src]} media={media} />
+        <Source isLazy={isLazy} srcList={[src]} media={media} />
       ) : null}
     </>
   );
@@ -88,7 +87,7 @@ export type PictureProps<MediaQueryType extends string> = MediaImages<
   alt?: string;
   className?: string;
   loading?: 'eager' | 'lazy';
-  showSpinner?: boolean;
+  imageRef?: React.Ref<HTMLImageElement>;
 };
 
 export function createPictureComponent<MediaQueryType extends string>({
@@ -96,7 +95,7 @@ export function createPictureComponent<MediaQueryType extends string>({
 }: {
   mediaQueryMap: Record<MediaQueryType, string>;
 }): React.FunctionComponent<PictureProps<MediaQueryType>> {
-  function Picture({
+  function Picture<MediaQueryType extends string>({
     src,
     src2x,
     srcWebp,
@@ -104,34 +103,34 @@ export function createPictureComponent<MediaQueryType extends string>({
     alt,
     className,
     loading,
-    showSpinner,
+    imageRef,
     ...rest
   }: PictureProps<MediaQueryType>) {
     const isLazy = loading === 'lazy';
 
-    const [isSpinnerVisible, setSpinnerVisible] = useState<boolean>(false);
-    const imageRef = useRef<HTMLImageElement>(null);
-
-    useEffect(() => {
-      if (!showSpinner || !imageRef.current) return;
-
-      const image = imageRef.current;
-
-      console.log('image.complete', image.complete);
-      if (image.complete) return;
-
-      setSpinnerVisible(true);
-
-      image.addEventListener('load', () => {
-        setSpinnerVisible(false);
-      });
-
-      image.addEventListener('error', () => {
-        setSpinnerVisible(false);
-      });
-    }, []);
-
-    console.log('isSpinnerVisible', isSpinnerVisible);
+    // const [isSpinnerVisible, setSpinnerVisible] = useState<boolean>(false);
+    // const imageRef = useRef<HTMLImageElement>(null);
+    //
+    // useEffect(() => {
+    //   if (!showSpinner || !imageRef.current) return;
+    //
+    //   const image = imageRef.current;
+    //
+    //   console.log('image.complete', image.complete);
+    //   if (image.complete) return;
+    //
+    //   setSpinnerVisible(true);
+    //
+    //   image.addEventListener('load', () => {
+    //     setSpinnerVisible(false);
+    //   });
+    //
+    //   image.addEventListener('error', () => {
+    //     setSpinnerVisible(false);
+    //   });
+    // }, []);
+    //
+    // console.log('isSpinnerVisible', isSpinnerVisible);
     return (
       <picture className={className}>
         {Object.keys(mediaQueryMap).map((key) => {
@@ -159,8 +158,7 @@ export function createPictureComponent<MediaQueryType extends string>({
             isLazy={isLazy}
           />
         ) : null}
-        <StyledImage
-          showSpinner={true}
+        <Image
           src={src ?? undefined}
           srcSet={src2x ? `${src2x} 2x` : undefined}
           loading={loading}
@@ -176,38 +174,37 @@ export function createPictureComponent<MediaQueryType extends string>({
   return Picture;
 }
 
-const rotateAnimation = keyframes`
-  0% {
-    transform: rotate(0)
-  }
+type MediaQueryType =
+  | 'mobileSmall'
+  | 'mobileLarge'
+  | 'tabletSmall'
+  | 'tabletLarge'
+  | 'laptop'
+  | 'desktop';
 
-  to {
-    transform: rotate(360deg)
-  }
-`;
+export const breakpoints = {
+  /** iPhone 5/SE */
+  mobileSmall: 320,
+  /** iPhone 6/7/8/X */
+  mobileMedium: 375,
+  /** iPhone 6/7/8 Plus */
+  mobileLarge: 414,
+  /** iPad 1, 2, Mini and Air */
+  tabletSmall: 768,
+  tabletLarge: 1024,
+  /** 1280 - 16 = 1264 -> 1260 - more beautiful number :) */
+  laptop: 1260,
+  /** 1536 - 16 = 1520 -> 1500 - more beautiful number :) */
+  desktop: 1500,
+};
 
-const StyledImage = styled(Image).withConfig({
-  shouldForwardProp: (prop) => (prop as string) !== 'showSpinner',
-})<{ showSpinner: boolean }>`
-  ${(props) =>
-    props.showSpinner
-      ? css`
-          opacity: 0;
+const MEDIA_QUERY_MAP: Record<MediaQueryType, string> = {
+  desktop: createMediaQuery({ min: breakpoints.desktop }),
+  laptop: createMediaQuery({ min: breakpoints.laptop }),
+  tabletLarge: createMediaQuery({ min: breakpoints.tabletLarge }),
+  tabletSmall: createMediaQuery({ min: breakpoints.tabletSmall }),
+  mobileLarge: createMediaQuery({ min: 480 }),
+  mobileSmall: createMediaQuery({ min: breakpoints.mobileSmall }),
+};
 
-          &:after {
-            content: '';
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            top: calc(50% - 15px);
-            left: calc(50% - 15px);
-            z-index: 9;
-            display: block;
-            border: 3px solid #ffc600;
-            border-top-color: transparent;
-            animation: ${rotateAnimation} 0.35s linear infinite;
-          }
-        `
-      : ''}
-`;
+const NewPicture = createPictureComponent({ mediaQueryMap: MEDIA_QUERY_MAP });
