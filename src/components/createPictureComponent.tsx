@@ -2,8 +2,6 @@ import React from 'react';
 
 import { convertSrcSet, getImageTypeFromUrl, Nullish } from '@tager/web-core';
 
-import { createMediaQuery } from '../utils/mixin';
-
 import Image from './Image';
 
 interface ImageSourceProps
@@ -12,13 +10,15 @@ interface ImageSourceProps
   isLazy: boolean;
 }
 
-function Source({ srcList, isLazy, type, srcSet, ...rest }: ImageSourceProps) {
+function Source({ srcList, isLazy, type, ...rest }: ImageSourceProps) {
+  if (srcList.length === 0) return null;
+
   return (
     <source
+      {...rest}
       srcSet={isLazy ? undefined : convertSrcSet(srcList)}
       data-srcset={isLazy ? convertSrcSet(srcList) : undefined}
-      type={type ?? getImageTypeFromUrl(srcList[0]) ?? undefined}
-      {...rest}
+      type={type ?? getImageTypeFromUrl(srcList[0] ?? null) ?? undefined}
     />
   );
 }
@@ -36,50 +36,49 @@ interface SourceGroupProps {
   isLazy: boolean;
 }
 
-function SourceGroup({ media, images, isLazy }: SourceGroupProps) {
-  if (!images) return null;
+function getSrcList(
+  src1x: Nullish<string>,
+  src2x: Nullish<string>
+): Array<string> {
+  const srcList: Array<string> = [];
 
-  const { src, src2x, webp, webp2x } = images;
+  if (src1x) {
+    srcList.push(src1x);
 
-  if (!src && !webp) {
-    return null;
+    if (src2x) {
+      srcList.push(src2x);
+    }
   }
+
+  return srcList;
+}
+
+function SourceGroup({ media, images, isLazy }: SourceGroupProps) {
+  if (!images || Object.values(images).length === 0) return null;
 
   return (
     <>
-      {webp && webp2x ? (
-        <Source
-          isLazy={isLazy}
-          srcList={[webp, webp2x]}
-          type="image/webp"
-          media={media}
-        />
-      ) : webp ? (
-        <Source
-          isLazy={isLazy}
-          type="image/webp"
-          srcList={[webp]}
-          media={media}
-        />
-      ) : null}
+      <Source
+        isLazy={isLazy}
+        srcList={getSrcList(images.webp, images.webp2x)}
+        media={media}
+      />
 
-      {src && src2x ? (
-        <Source isLazy={isLazy} srcList={[src, src2x]} media={media} />
-      ) : src ? (
-        <Source isLazy={isLazy} srcList={[src]} media={media} />
-      ) : null}
+      <Source
+        isLazy={isLazy}
+        srcList={getSrcList(images.src, images.src2x)}
+        media={media}
+      />
     </>
   );
 }
 
-type MediaImages<MediaQueryType extends string> = {
-  [key in MediaQueryType]?: PictureImageType;
-};
+interface MediaQueryItemType<QueryName extends string = string> {
+  name: QueryName;
+  value: string;
+}
 
-export type PictureProps<MediaQueryType extends string> = MediaImages<
-  MediaQueryType
-> & {
-  srcSet?: PictureImageType;
+export interface CommonPictureProps {
   src?: Nullish<string>;
   src2x?: Nullish<string>;
   srcWebp?: Nullish<string>;
@@ -88,123 +87,111 @@ export type PictureProps<MediaQueryType extends string> = MediaImages<
   className?: string;
   loading?: 'eager' | 'lazy';
   imageRef?: React.Ref<HTMLImageElement>;
+}
+
+export interface SpecialPictureProps {
+  mediaQueryList: Array<MediaQueryItemType>;
+  imageMap: { [key: string]: PictureImageType | undefined };
+}
+
+export interface PictureProps extends CommonPictureProps, SpecialPictureProps {}
+
+function Picture({
+  src,
+  src2x,
+  srcWebp,
+  srcWebp2x,
+  alt,
+  className,
+  loading,
+  imageRef,
+  mediaQueryList,
+  imageMap,
+}: PictureProps) {
+  const isLazy = loading === 'lazy';
+
+  return (
+    <picture className={className}>
+      {mediaQueryList.map((mediaQuery) => (
+        <SourceGroup
+          key={mediaQuery.name}
+          media={mediaQuery.value}
+          images={imageMap[mediaQuery.name]}
+          isLazy={isLazy}
+        />
+      ))}
+      {src2x || srcWebp || srcWebp2x ? (
+        <SourceGroup
+          images={{
+            src: src,
+            src2x: src2x,
+            webp: srcWebp,
+            webp2x: srcWebp2x,
+          }}
+          isLazy={isLazy}
+        />
+      ) : null}
+      <Image
+        src={src ?? undefined}
+        srcSet={src2x ? `${src2x} 2x` : undefined}
+        loading={loading}
+        alt={alt}
+        ref={imageRef}
+      />
+    </picture>
+  );
+}
+
+function dedupeMediaQueryList<T extends { name: string }>(
+  list: Array<T>
+): Array<T> {
+  const map = new Map();
+  list.forEach((item) => map.set(item.name, item));
+
+  /**
+   * The Map remembers the original insertion order of the keys.
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+   */
+  return Array.from(map.values());
+}
+
+interface PictureHocOptionsType<QueryName extends string> {
+  mediaQueryList: Array<MediaQueryItemType<QueryName>>;
+}
+
+type PictureImagesByQueryNameProps<QueryName extends string> = {
+  [key in QueryName]?: PictureImageType;
 };
 
-export function createPictureComponent<MediaQueryType extends string>({
-  mediaQueryMap,
-}: {
-  mediaQueryMap: Record<MediaQueryType, string>;
-}): React.FunctionComponent<PictureProps<MediaQueryType>> {
-  function Picture<MediaQueryType extends string>({
-    src,
-    src2x,
-    srcWebp,
-    srcWebp2x,
-    alt,
-    className,
-    loading,
-    imageRef,
-    ...rest
-  }: PictureProps<MediaQueryType>) {
-    const isLazy = loading === 'lazy';
+type StrictPictureProps<QueryName extends string> = CommonPictureProps &
+  PictureImagesByQueryNameProps<QueryName>;
 
-    // const [isSpinnerVisible, setSpinnerVisible] = useState<boolean>(false);
-    // const imageRef = useRef<HTMLImageElement>(null);
-    //
-    // useEffect(() => {
-    //   if (!showSpinner || !imageRef.current) return;
-    //
-    //   const image = imageRef.current;
-    //
-    //   console.log('image.complete', image.complete);
-    //   if (image.complete) return;
-    //
-    //   setSpinnerVisible(true);
-    //
-    //   image.addEventListener('load', () => {
-    //     setSpinnerVisible(false);
-    //   });
-    //
-    //   image.addEventListener('error', () => {
-    //     setSpinnerVisible(false);
-    //   });
-    // }, []);
-    //
-    // console.log('isSpinnerVisible', isSpinnerVisible);
+function createPictureComponent<QueryName extends string>(
+  options: PictureHocOptionsType<QueryName>
+) {
+  const uniqueMediaQueryList = dedupeMediaQueryList(options.mediaQueryList);
+
+  function StrictPicture(props: StrictPictureProps<QueryName>) {
+    const imageMap = uniqueMediaQueryList.reduce<
+      PictureImagesByQueryNameProps<QueryName>
+    >(
+      (map, mediaQuery) => ({
+        ...map,
+        [mediaQuery.name]: props[mediaQuery.name],
+      }),
+      {}
+    );
+
     return (
-      <picture className={className}>
-        {Object.keys(mediaQueryMap).map((key) => {
-          const mediaKey = key as MediaQueryType;
-          const imageMapByMediaQuery = (rest as unknown) as MediaImages<
-            MediaQueryType
-          >;
-          return (
-            <SourceGroup
-              key={key}
-              media={mediaQueryMap[mediaKey]}
-              images={imageMapByMediaQuery[mediaKey]}
-              isLazy={isLazy}
-            />
-          );
-        })}
-        {src2x || srcWebp || srcWebp2x ? (
-          <SourceGroup
-            images={{
-              src: src,
-              src2x: src2x,
-              webp: srcWebp,
-              webp2x: srcWebp2x,
-            }}
-            isLazy={isLazy}
-          />
-        ) : null}
-        <Image
-          src={src ?? undefined}
-          srcSet={src2x ? `${src2x} 2x` : undefined}
-          loading={loading}
-          alt={alt}
-          ref={imageRef}
-        />
-      </picture>
+      <Picture
+        {...props}
+        mediaQueryList={uniqueMediaQueryList}
+        imageMap={imageMap}
+      />
     );
   }
 
-  Picture.displayName = 'Picture';
-
-  return Picture;
+  return StrictPicture;
 }
 
-type MediaQueryType =
-  | 'mobileSmall'
-  | 'mobileLarge'
-  | 'tabletSmall'
-  | 'tabletLarge'
-  | 'laptop'
-  | 'desktop';
-
-export const breakpoints = {
-  /** iPhone 5/SE */
-  mobileSmall: 320,
-  /** iPhone 6/7/8/X */
-  mobileMedium: 375,
-  /** iPhone 6/7/8 Plus */
-  mobileLarge: 414,
-  /** iPad 1, 2, Mini and Air */
-  tabletSmall: 768,
-  tabletLarge: 1024,
-  /** 1280 - 16 = 1264 -> 1260 - more beautiful number :) */
-  laptop: 1260,
-  /** 1536 - 16 = 1520 -> 1500 - more beautiful number :) */
-  desktop: 1500,
-};
-
-const MEDIA_QUERY_MAP: Record<MediaQueryType, string> = {
-  desktop: createMediaQuery({ min: breakpoints.desktop }),
-  laptop: createMediaQuery({ min: breakpoints.laptop }),
-  tabletLarge: createMediaQuery({ min: breakpoints.tabletLarge }),
-  tabletSmall: createMediaQuery({ min: breakpoints.tabletSmall }),
-  mobileLarge: createMediaQuery({ min: 480 }),
-  mobileSmall: createMediaQuery({ min: breakpoints.mobileSmall }),
-};
-
-const NewPicture = createPictureComponent({ mediaQueryMap: MEDIA_QUERY_MAP });
+export default createPictureComponent;
