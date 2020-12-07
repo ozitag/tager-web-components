@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
-import { convertSrcSet, getImageTypeFromUrl, Nullish } from '@tager/web-core';
+import {
+  assignRef,
+  convertSrcSet,
+  getImageTypeFromUrl,
+  Nullish,
+  useIsomorphicLayoutEffect,
+} from '@tager/web-core';
 
 import Image from './Image';
 
@@ -87,6 +93,7 @@ export interface CommonPictureProps {
   className?: string;
   loading?: 'eager' | 'lazy';
   imageRef?: React.Ref<HTMLImageElement>;
+  onLoad?: () => void;
 }
 
 export interface SpecialPictureProps {
@@ -104,11 +111,25 @@ function Picture({
   alt,
   className,
   loading,
-  imageRef,
+  imageRef: outerImageRef,
   mediaQueryList,
   imageMap,
+  onLoad,
 }: PictureProps) {
   const isLazy = loading === 'lazy';
+  const innerImageRef = useRef<HTMLImageElement>(null);
+
+  useIsomorphicLayoutEffect(function trackImageLoadStatus() {
+    if (!innerImageRef.current) return;
+
+    const imageElement = innerImageRef.current;
+
+    if (imageElement.complete) {
+      onLoad?.();
+    } else {
+      imageElement.addEventListener('load', () => onLoad?.());
+    }
+  }, []);
 
   return (
     <picture className={className}>
@@ -136,7 +157,10 @@ function Picture({
         srcSet={src2x ? `${src2x} 2x` : undefined}
         loading={loading}
         alt={alt}
-        ref={imageRef}
+        ref={(imageNode) => {
+          assignRef(innerImageRef, imageNode);
+          assignRef(outerImageRef, imageNode);
+        }}
       />
     </picture>
   );
