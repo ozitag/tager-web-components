@@ -97,5 +97,9 @@ const PictureContainer = styled.div<{ backgroundColor?: string }>`
 
   img {
     transition: opacity 0.3s;
+
+    &:not([src]) {
+      opacity: 0;
+    }
   }
 `;
