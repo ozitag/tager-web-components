@@ -56,13 +56,13 @@ function Gallery({ options, onClose }: Props) {
       <Container>
         <ImageContainer>
           <LoadableImage
-            src={imageList[currentIndex].url}
+            src={imageList[currentIndex]?.url}
             spinnerContainerStyle={{ width: '50vw', height: '50vh' }}
             alt=""
           />
         </ImageContainer>
         <ImageFooter>
-          <Caption>{imageList[currentIndex].caption}</Caption>
+          <Caption>{imageList[currentIndex]?.caption}</Caption>
           <PageNumber>
             {currentIndex + 1} of {imageList.length}
           </PageNumber>

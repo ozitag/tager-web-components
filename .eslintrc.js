@@ -2,18 +2,10 @@ module.exports = {
   extends: [
     'react-app',
     'prettier/@typescript-eslint',
-    'prettier',
+    'plugin:prettier/recommended',
     'prettier/react',
   ],
-  plugins: ['prettier'],
-  env: {
-    browser: true,
-    node: true,
-    jest: true,
-  },
   rules: {
-    'prettier/prettier': 'error',
-    'import/prefer-default-export': 'off',
     'import/order': [
       'error',
       {

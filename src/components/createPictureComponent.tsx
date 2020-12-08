@@ -1,221 +1,101 @@
-import React, { useRef } from 'react';
+import React, {
+  CSSProperties,
+  useMemo,
+  useState,
+  VoidFunctionComponent,
+} from 'react';
+import styled from 'styled-components';
 
 import {
-  assignRef,
-  convertSrcSet,
-  getImageTypeFromUrl,
-  Nullish,
-  useIsomorphicLayoutEffect,
-} from '@tager/web-core';
+  createPlainPictureComponent,
+  PictureFactoryOptionsType,
+  PlainPictureProps,
+} from './createPlainPictureComponent';
+import Spinner from './Spinner';
 
-import Image from './Image';
-
-interface ImageSourceProps
-  extends React.SourceHTMLAttributes<HTMLSourceElement> {
-  srcList: Array<string>;
-  isLazy: boolean;
-}
-
-function Source({ srcList, isLazy, type, ...rest }: ImageSourceProps) {
-  if (srcList.length === 0) return null;
-
-  return (
-    <source
-      {...rest}
-      srcSet={isLazy ? undefined : convertSrcSet(srcList)}
-      data-srcset={isLazy ? convertSrcSet(srcList) : undefined}
-      type={type ?? getImageTypeFromUrl(srcList[0] ?? null) ?? undefined}
-    />
-  );
-}
-
-export interface PictureImageType {
-  src?: Nullish<string>;
-  src2x?: Nullish<string>;
-  webp?: Nullish<string>;
-  webp2x?: Nullish<string>;
-}
-
-interface SourceGroupProps {
-  media?: string;
-  images?: PictureImageType;
-  isLazy: boolean;
-}
-
-function getSrcList(
-  src1x: Nullish<string>,
-  src2x: Nullish<string>
-): Array<string> {
-  const srcList: Array<string> = [];
-
-  if (src1x) {
-    srcList.push(src1x);
-
-    if (src2x) {
-      srcList.push(src2x);
-    }
-  }
-
-  return srcList;
-}
-
-function SourceGroup({ media, images, isLazy }: SourceGroupProps) {
-  if (!images || Object.values(images).length === 0) return null;
-
-  return (
-    <>
-      <Source
-        isLazy={isLazy}
-        srcList={getSrcList(images.webp, images.webp2x)}
-        media={media}
-      />
-
-      <Source
-        isLazy={isLazy}
-        srcList={getSrcList(images.src, images.src2x)}
-        media={media}
-      />
-    </>
-  );
-}
-
-interface MediaQueryItemType<QueryName extends string = string> {
-  name: QueryName;
-  value: string;
-}
-
-export interface CommonPictureProps {
-  src?: Nullish<string>;
-  src2x?: Nullish<string>;
-  srcWebp?: Nullish<string>;
-  srcWebp2x?: Nullish<string>;
-  alt?: string;
+interface SmartPictureProps {
   className?: string;
-  loading?: 'eager' | 'lazy';
-  imageRef?: React.Ref<HTMLImageElement>;
-  onLoad?: () => void;
+  useSpinner?: boolean;
+  usePlaceholder?: boolean;
+  width?: number;
+  height?: number;
+  placeholderColor?: string;
+  spinnerComponent?: VoidFunctionComponent;
 }
 
-export interface SpecialPictureProps {
-  mediaQueryList: Array<MediaQueryItemType>;
-  imageMap: { [key: string]: PictureImageType | undefined };
-}
+export type PictureProps<
+  QueryName extends string
+> = PlainPictureProps<QueryName> & SmartPictureProps;
 
-export interface PictureProps extends CommonPictureProps, SpecialPictureProps {}
-
-function Picture({
-  src,
-  src2x,
-  srcWebp,
-  srcWebp2x,
-  alt,
-  className,
-  loading,
-  imageRef: outerImageRef,
-  mediaQueryList,
-  imageMap,
-  onLoad,
-}: PictureProps) {
-  const isLazy = loading === 'lazy';
-  const innerImageRef = useRef<HTMLImageElement>(null);
-
-  useIsomorphicLayoutEffect(function trackImageLoadStatus() {
-    if (!innerImageRef.current) return;
-
-    const imageElement = innerImageRef.current;
-
-    if (imageElement.complete) {
-      onLoad?.();
-    } else {
-      imageElement.addEventListener('load', () => onLoad?.());
-    }
-  }, []);
-
-  return (
-    <picture className={className}>
-      {mediaQueryList.map((mediaQuery) => (
-        <SourceGroup
-          key={mediaQuery.name}
-          media={mediaQuery.value}
-          images={imageMap[mediaQuery.name]}
-          isLazy={isLazy}
-        />
-      ))}
-      {src2x || srcWebp || srcWebp2x ? (
-        <SourceGroup
-          images={{
-            src: src,
-            src2x: src2x,
-            webp: srcWebp,
-            webp2x: srcWebp2x,
-          }}
-          isLazy={isLazy}
-        />
-      ) : null}
-      <Image
-        src={src ?? undefined}
-        srcSet={src2x ? `${src2x} 2x` : undefined}
-        loading={loading}
-        alt={alt}
-        ref={(imageNode) => {
-          assignRef(innerImageRef, imageNode);
-          assignRef(outerImageRef, imageNode);
-        }}
-      />
-    </picture>
-  );
-}
-
-function dedupeMediaQueryList<T extends { name: string }>(
-  list: Array<T>
-): Array<T> {
-  const map = new Map();
-  list.forEach((item) => map.set(item.name, item));
-
-  /**
-   * The Map remembers the original insertion order of the keys.
-   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
-   */
-  return Array.from(map.values());
-}
-
-interface PictureHocOptionsType<QueryName extends string> {
-  mediaQueryList: Array<MediaQueryItemType<QueryName>>;
-}
-
-type PictureImagesByQueryNameProps<QueryName extends string> = {
-  [key in QueryName]?: PictureImageType;
-};
-
-type StrictPictureProps<QueryName extends string> = CommonPictureProps &
-  PictureImagesByQueryNameProps<QueryName>;
-
-function createPictureComponent<QueryName extends string>(
-  options: PictureHocOptionsType<QueryName>
+export function createPictureComponent<QueryName extends string>(
+  options: PictureFactoryOptionsType<QueryName>
 ) {
-  const uniqueMediaQueryList = dedupeMediaQueryList(options.mediaQueryList);
+  const PlainPicture = createPlainPictureComponent(options);
 
-  function StrictPicture(props: StrictPictureProps<QueryName>) {
-    const imageMap = uniqueMediaQueryList.reduce<
-      PictureImagesByQueryNameProps<QueryName>
-    >(
-      (map, mediaQuery) => ({
-        ...map,
-        [mediaQuery.name]: props[mediaQuery.name],
-      }),
-      {}
+  function SmartPicture({
+    className,
+    width,
+    height,
+    useSpinner,
+    usePlaceholder,
+    placeholderColor,
+    spinnerComponent: SpinnerComponent,
+    ...plainPictureProps
+  }: PictureProps<QueryName>) {
+    const [isLoading, setLoading] = useState(false);
+
+    function renderSpinner() {
+      return SpinnerComponent ? <SpinnerComponent /> : <Spinner show />;
+    }
+
+    const containerStyle = useMemo<CSSProperties | undefined>(
+      () =>
+        width !== undefined && height !== undefined
+          ? { width, height }
+          : undefined,
+      [height, width]
+    );
+
+    const imageStyle = useMemo<CSSProperties | undefined>(
+      () =>
+        isLoading && (useSpinner || usePlaceholder)
+          ? { opacity: 0 }
+          : undefined,
+      [isLoading, usePlaceholder, useSpinner]
     );
 
     return (
-      <Picture
-        {...props}
-        mediaQueryList={uniqueMediaQueryList}
-        imageMap={imageMap}
-      />
+      <PictureContainer
+        className={className}
+        style={containerStyle}
+        backgroundColor={
+          isLoading && usePlaceholder ? placeholderColor : undefined
+        }
+      >
+        {isLoading && useSpinner ? renderSpinner() : null}
+
+        <PlainPicture
+          {...plainPictureProps}
+          onLoadStart={() => setLoading(true)}
+          onLoad={() => setLoading(false)}
+          imageStyle={imageStyle}
+        />
+      </PictureContainer>
     );
   }
 
-  return StrictPicture;
+  return SmartPicture;
 }
 
-export default createPictureComponent;
+const PictureContainer = styled.div<{ backgroundColor?: string }>`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+  background-color: ${(props) => props.backgroundColor ?? 'none'};
+
+  img {
+    transition: opacity 0.3s;
+  }
+`;

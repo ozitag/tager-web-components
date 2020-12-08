@@ -7,6 +7,7 @@ export { default as Spinner } from './components/Spinner';
 export { default as LoadableImage } from './components/LoadableImage';
 export { default as Page } from './components/Page';
 export { default as Preloader } from './components/Preloader';
+export * from './components/createPlainPictureComponent';
 export * from './components/createPictureComponent';
 export * from './components/createLinkComponent';
 export { default as Image } from './components/Image';
