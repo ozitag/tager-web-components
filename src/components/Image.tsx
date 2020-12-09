@@ -48,7 +48,7 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
 const StyledImage = styled.img`
   transition: opacity 0.3s;
 
-  &:not([src]) {
+  &:not(.lazyloaded):not([src]) {
     opacity: 0;
   }
 `;
