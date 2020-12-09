@@ -94,12 +94,4 @@ const PictureContainer = styled.div<{ backgroundColor?: string }>`
   justify-content: center;
   transition: background-color 0.3s;
   background-color: ${(props) => props.backgroundColor ?? 'none'};
-
-  img {
-    transition: opacity 0.3s;
-
-    &:not([src]) {
-      opacity: 0;
-    }
-  }
 `;

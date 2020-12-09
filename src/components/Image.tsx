@@ -1,9 +1,10 @@
 import React from 'react';
+import styled from 'styled-components';
 
 /**
- * Placeholder fixes broken image symbol: https://github.com/aFarkas/lazysizes#broken-image-symbol
+ * Placeholder fixes broken image symbol: {@link https://github.com/aFarkas/lazysizes#broken-image-symbol}
  *
- * Reference: https://github.com/verlok/vanilla-lazyload/issues/212#issuecomment-397807313
+ * Reference: {@link https://github.com/verlok/vanilla-lazyload/issues/212#issuecomment-397807313}
  *
  * If you don't put anything in the `src`,
  * when `lazysizes` copies the `data-src` in the `src`,
@@ -30,7 +31,7 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
       .filter(Boolean)
       .join(' ');
     return (
-      <img
+      <StyledImage
         className={imgClassName}
         ref={ref}
         src={isLazy ? undefined : src}
@@ -43,5 +44,13 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
     );
   }
 );
+
+const StyledImage = styled.img`
+  transition: opacity 0.3s;
+
+  &:not([src]) {
+    opacity: 0;
+  }
+`;
 
 export default Image;
