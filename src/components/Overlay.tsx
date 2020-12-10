@@ -3,19 +3,20 @@ import styled from 'styled-components';
 
 import { scroller } from '@tager/web-core';
 
-export type OverlayProps = React.HTMLAttributes<HTMLDivElement> & {
-  children: React.ReactNode;
+export interface OverlayProps extends React.HTMLAttributes<HTMLDivElement> {
   onClose: () => void;
-};
+}
 
-function Overlay({ onClose, children, ...rest }: OverlayProps) {
+function Overlay({ onClose, hidden, ...rest }: OverlayProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scroller.lock(ref.current);
+    if (!hidden) {
+      scroller.lock(ref.current);
+    }
 
     return () => scroller.unlockAll();
-  }, []);
+  }, [hidden]);
 
   function handleClick(event: React.MouseEvent<HTMLDivElement>) {
     /** if click occurs on overlay */
@@ -25,9 +26,7 @@ function Overlay({ onClose, children, ...rest }: OverlayProps) {
   }
 
   return (
-    <Container ref={ref} onClick={handleClick} {...rest}>
-      {children}
-    </Container>
+    <Container ref={ref} onClick={handleClick} hidden={hidden} {...rest} />
   );
 }
 
@@ -43,6 +42,10 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &[hidden] {
+    display: none;
+  }
 `;
 
 export default Overlay;

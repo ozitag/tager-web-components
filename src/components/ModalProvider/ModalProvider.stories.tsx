@@ -6,6 +6,7 @@ import ModalProvider from './ModalProvider';
 import { useModal } from './ModalProvider.hooks';
 import { ModalProps } from './ModalProvider.types';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   component: ModalProvider,
   title: 'ModalProvider',
@@ -50,14 +51,17 @@ const Template: Story = () => {
   const openModal = useModal();
 
   return (
-    <Button
-      type={'button'}
-      onClick={() =>
-        openModal(AuthModal, { email: 'fwqewe@fwqe.fw', password: '423543' })
-      }
-    >
-      Open Modal
-    </Button>
+    <div>
+      <Button
+        type={'button'}
+        onClick={() =>
+          openModal(AuthModal, { email: 'fwqewe@fwqe.fw', password: '423543' })
+        }
+      >
+        Open Modal
+      </Button>
+      <div style={{ height: '120vh', marginTop: 100 }}>some long content</div>
+    </div>
   );
 };
 

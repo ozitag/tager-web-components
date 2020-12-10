@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Story } from '@storybook/react';
 
 import Gallery from './Gallery';
@@ -6,6 +6,7 @@ import GalleryProvider from './Gallery.provider';
 import { GalleryOptions } from './Gallery.types';
 import { useGallery } from './Gallery.hooks';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   component: Gallery,
   title: 'Gallery',
@@ -33,9 +34,9 @@ const Template: Story<GalleryOptions> = (args) => {
     openGallery(args);
   }
 
-  useEffect(() => {
-    handleClick();
-  }, []);
+  // useEffect(() => {
+  //   handleClick();
+  // }, []);
 
   return (
     <button type={'button'} onClick={handleClick}>

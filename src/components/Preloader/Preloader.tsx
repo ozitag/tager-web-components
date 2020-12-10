@@ -45,6 +45,7 @@ function Preloader({ hidden: hiddenProp, className, debug }: Props) {
       `%c [DEBUG Preloader]: isInitiallyVisible - ${isInitiallyVisible()}`,
       'color: green'
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debug]);
 
   useEffect(() => {
@@ -81,6 +82,7 @@ function Preloader({ hidden: hiddenProp, className, debug }: Props) {
     return () => {
       document.removeEventListener('DOMContentLoaded', hidePreloader);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isControlled]);
 
   if (status === 'HIDDEN') {

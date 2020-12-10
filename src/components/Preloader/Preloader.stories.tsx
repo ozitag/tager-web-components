@@ -3,6 +3,7 @@ import { Story } from '@storybook/react';
 
 import Preloader from './Preloader';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   component: Preloader,
   title: 'Preloader',

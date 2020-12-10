@@ -41,7 +41,7 @@ function LoadableImage({
   }
 
   if (status === FETCH_STATUSES.SUCCESS) {
-    return <img {...imageProps} />;
+    return <img {...imageProps} alt={imageProps.alt} />;
   }
 
   return (

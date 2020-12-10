@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
 
 import { Nullable, useOnKeyDown } from '@tager/web-core';
 
@@ -7,20 +8,49 @@ import Overlay, { OverlayProps } from '../Overlay';
 import { ModalProps, OpenModalFunction, State } from './ModalProvider.types';
 import { ModalContextProvider } from './ModalProvider.hooks';
 
-type Props = {
+interface ModalProviderProps {
   children: React.ReactNode;
   components?: { Overlay?: React.ComponentType<OverlayProps> };
-};
+  withAnimation?: boolean;
+}
 
-function ModalProvider(props: Props) {
+function ModalProvider(props: ModalProviderProps) {
   const [modal, setModal] = useState<Nullable<State>>(null);
+  const [isInnerContentVisible, setInnerContentVisible] = useState(false);
+
+  const withAnimation = props.withAnimation ?? true;
 
   const openModal = useCallback<OpenModalFunction<ModalProps>>(
     (...args: Parameters<OpenModalFunction<ModalProps>>) =>
       setModal({ type: args[0], props: args[1], options: args[2] }),
     []
   );
-  const closeModal = useCallback(() => setModal(null), []);
+
+  useEffect(
+    function showInnerContentIfModalOpen() {
+      if (modal) {
+        setInnerContentVisible(true);
+      }
+    },
+    [modal]
+  );
+
+  const closeModal = useCallback(
+    function hideInnerContent() {
+      setInnerContentVisible(false);
+
+      if (!withAnimation) {
+        setModal(null);
+      }
+    },
+    [withAnimation]
+  );
+
+  function handleTransitionEnd() {
+    if (!isInnerContentVisible) {
+      setModal(null);
+    }
+  }
 
   useOnKeyDown(['Escape', 'Esc'], () => {
     if (modal) {
@@ -31,24 +61,51 @@ function ModalProvider(props: Props) {
   const ModalOverlay =
     modal?.options?.components?.Overlay ?? props.components?.Overlay ?? Overlay;
 
+  const isOpen = Boolean(modal);
+
   return (
     <ModalContextProvider value={openModal}>
-      {modal ? (
-        <ModalOverlay
-          data-testid="modal-overlay"
-          data-modal-overlay
-          onClose={closeModal}
+      <ModalOverlay
+        data-testid="modal-overlay"
+        data-modal-overlay
+        onClose={closeModal}
+        hidden={!isOpen}
+      >
+        <ModalInner
+          isOpen={isInnerContentVisible}
+          withAnimation={withAnimation}
+          onTransitionEnd={handleTransitionEnd}
         >
-          {React.createElement<ModalProps>(modal.type, {
-            closeModal,
-            innerProps: modal.props,
-          })}
-        </ModalOverlay>
-      ) : null}
+          {modal
+            ? React.createElement<ModalProps>(modal.type, {
+                closeModal,
+                innerProps: modal.props,
+              })
+            : null}
+        </ModalInner>
+      </ModalOverlay>
 
       {props.children}
     </ModalContextProvider>
   );
 }
+
+const ModalInner = styled.div<{ isOpen: boolean; withAnimation: boolean }>`
+  transition: ${(props) =>
+    props.withAnimation
+      ? 'transform 0.35s ease-in-out, opacity 0.35s ease-in-out'
+      : 'none'};
+
+  ${(props) =>
+    props.isOpen
+      ? css`
+          transform: scale(1);
+          opacity: 1;
+        `
+      : css`
+          transform: scale(0);
+          opacity: 0;
+        `}
+`;
 
 export default ModalProvider;

@@ -67,7 +67,11 @@ export function createDynamicLinkBuilder<Key extends string>(
       if (
         !Object.keys(routeRegex.groups).every((param) => {
           let value = convertedQuery[param] || '';
-          const { repeat, optional } = routeRegex.groups[param];
+          const group = routeRegex.groups[param];
+
+          if (!group) return false;
+
+          const { repeat, optional } = group;
 
           // support single-level catch-all
           // TODO: more robust handling for user-error (passing `/`)
