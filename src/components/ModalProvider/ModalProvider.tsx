@@ -6,12 +6,16 @@ import { Nullable, useOnKeyDown } from '@tager/web-core';
 import Overlay from '../Overlay';
 
 import {
-  ModalProviderProps,
+  CommonModalOptions,
   ModalProps,
   OpenModalFunction,
   State,
 } from './ModalProvider.types';
 import { ModalContextProvider } from './ModalProvider.hooks';
+
+export interface ModalProviderProps extends CommonModalOptions {
+  children: React.ReactNode;
+}
 
 function ModalProvider(props: ModalProviderProps) {
   const [modal, setModal] = useState<Nullable<State>>(null);

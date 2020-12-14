@@ -8,13 +8,12 @@ export type State = {
   options?: OpenModalFunctionOptions;
 };
 
-export interface ModalProviderProps {
-  children: React.ReactNode;
+export interface CommonModalOptions {
   components?: { Overlay?: React.ComponentType<OverlayProps> };
   withAnimation?: boolean;
 }
 
-export type OpenModalFunctionOptions = Omit<ModalProviderProps, 'children'>;
+export type OpenModalFunctionOptions = CommonModalOptions;
 
 export interface OpenModalFunction<P extends ModalProps> {
   (type: React.ComponentType<P>, props: P['innerProps']): void;
