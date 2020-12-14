@@ -3,22 +3,22 @@ import styled, { css } from 'styled-components';
 
 import { Nullable, useOnKeyDown } from '@tager/web-core';
 
-import Overlay, { OverlayProps } from '../Overlay';
+import Overlay from '../Overlay';
 
-import { ModalProps, OpenModalFunction, State } from './ModalProvider.types';
+import {
+  ModalProviderProps,
+  ModalProps,
+  OpenModalFunction,
+  State,
+} from './ModalProvider.types';
 import { ModalContextProvider } from './ModalProvider.hooks';
-
-interface ModalProviderProps {
-  children: React.ReactNode;
-  components?: { Overlay?: React.ComponentType<OverlayProps> };
-  withAnimation?: boolean;
-}
 
 function ModalProvider(props: ModalProviderProps) {
   const [modal, setModal] = useState<Nullable<State>>(null);
   const [isInnerContentVisible, setInnerContentVisible] = useState(false);
 
-  const withAnimation = props.withAnimation ?? true;
+  const withAnimation =
+    modal?.options?.withAnimation ?? props.withAnimation ?? true;
 
   const openModal = useCallback<OpenModalFunction<ModalProps>>(
     (...args: Parameters<OpenModalFunction<ModalProps>>) =>
