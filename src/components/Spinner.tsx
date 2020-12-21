@@ -1,19 +1,20 @@
 import React from 'react';
 import styled, { Keyframes, keyframes } from 'styled-components';
 
-type Props = {
+interface SpinnerProps {
   show: boolean;
   size?: number;
   thickness?: number;
-};
+  color?: string;
+}
 
-function Spinner(props: Props) {
+function Spinner(props: SpinnerProps) {
   const size = props.size ?? 100;
   const thickness = props.thickness ?? 4;
   return (
     <Container visible={Boolean(props.show)}>
       <Inner size={size}>
-        <Circle thickness={thickness} />
+        <Circle thickness={thickness} color={props.color} />
       </Inner>
     </Container>
   );
@@ -56,10 +57,11 @@ function getAnimation(props: { thickness: number }): Keyframes {
 `;
 }
 
-const Circle = styled.div<{ thickness: number }>`
+const Circle = styled.div<{ thickness: number; color?: string }>`
   position: absolute;
 
-  border: ${(props) => props.thickness}px solid white;
+  border: ${(props) => props.thickness}px solid
+    ${(props) => props.color ?? 'white'};
   opacity: 1;
   border-radius: 50%;
   animation-name: ${(props) => getAnimation({ thickness: props.thickness })};

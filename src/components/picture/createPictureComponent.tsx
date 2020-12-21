@@ -6,12 +6,15 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 
+import { FETCH_STATUSES, FetchStatus } from '@tager/web-core';
+
+import Spinner from '../Spinner';
+
 import {
   createPlainPictureComponent,
   PictureFactoryOptionsType,
   PlainPictureProps,
 } from './createPlainPictureComponent';
-import Spinner from './Spinner';
 
 interface SmartPictureProps {
   className?: string;
@@ -40,6 +43,7 @@ export function createPictureComponent<QueryName extends string>(
     usePlaceholder,
     placeholderColor,
     spinnerComponent: SpinnerComponent,
+    onStatusChange,
     ...plainPictureProps
   }: PictureProps<QueryName>) {
     const [isLoading, setLoading] = useState(false);
@@ -64,6 +68,14 @@ export function createPictureComponent<QueryName extends string>(
       [isLoading, usePlaceholder, useSpinner]
     );
 
+    function handleStatusChange(status: FetchStatus) {
+      setLoading(status === FETCH_STATUSES.LOADING);
+
+      if (onStatusChange) {
+        onStatusChange(status);
+      }
+    }
+
     return (
       <PictureContainer
         className={className}
@@ -71,13 +83,13 @@ export function createPictureComponent<QueryName extends string>(
         backgroundColor={
           isLoading && usePlaceholder ? placeholderColor : undefined
         }
+        data-picture-loading={isLoading}
       >
         {isLoading && useSpinner ? renderSpinner() : null}
 
         <PlainPicture
           {...plainPictureProps}
-          onLoadStart={() => setLoading(true)}
-          onLoad={() => setLoading(false)}
+          onStatusChange={handleStatusChange}
           imageStyle={imageStyle}
         />
       </PictureContainer>
@@ -94,4 +106,8 @@ const PictureContainer = styled.div<{ backgroundColor?: string }>`
   justify-content: center;
   transition: background-color 0.3s;
   background-color: ${(props) => props.backgroundColor ?? 'none'};
+
+  img {
+    transition: opacity 0.3s;
+  }
 `;
