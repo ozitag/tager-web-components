@@ -1,14 +1,15 @@
-import React, { CSSProperties, useRef } from 'react';
+import React, { CSSProperties, useEffect, useRef, useState } from 'react';
 
 import {
   assignRef,
   convertSrcSet,
+  FETCH_STATUSES,
+  FetchStatus,
   getImageTypeFromUrl,
   Nullish,
-  useIsomorphicLayoutEffect,
 } from '@tager/web-core';
 
-import Image from './Image';
+import Image, { IMAGE_PLACEHOLDER } from '../Image';
 
 interface ImageSourceProps
   extends React.SourceHTMLAttributes<HTMLSourceElement> {
@@ -94,8 +95,7 @@ export interface CommonPictureProps {
   imageStyle?: CSSProperties;
   loading?: 'eager' | 'lazy';
   imageRef?: React.Ref<HTMLImageElement>;
-  onLoad?: () => void;
-  onLoadStart?: () => void;
+  onStatusChange?: (status: FetchStatus) => void;
 }
 
 export interface SpecialPictureProps {
@@ -117,28 +117,108 @@ function Picture({
   imageRef: outerImageRef,
   mediaQueryList,
   imageMap,
-  onLoad,
-  onLoadStart,
+  onStatusChange,
 }: InitialPictureProps) {
   const isLazy = loading === 'lazy';
   const innerImageRef = useRef<HTMLImageElement>(null);
+  const [status, setStatus] = useState<FetchStatus>(FETCH_STATUSES.IDLE);
 
-  useIsomorphicLayoutEffect(function trackImageLoadStatus() {
+  const statusChangeHandler = useRef<
+    CommonPictureProps['onStatusChange'] | undefined
+  >(onStatusChange);
+
+  useEffect(function trackImageLoadStatus() {
     if (!innerImageRef.current) return;
 
-    if (innerImageRef.current.complete) {
-      onLoad?.();
-    } else {
-      /** Cached image requires small amount of time to be loaded from cache */
-      setTimeout(() => {
-        if (innerImageRef.current && !innerImageRef.current.complete) {
-          onLoadStart?.();
-        }
-      }, 100);
+    /** If Image is already loaded */
+    if (
+      innerImageRef.current.src &&
+      innerImageRef.current.complete &&
+      IMAGE_PLACEHOLDER !== innerImageRef.current.src
+    ) {
+      setStatus(FETCH_STATUSES.SUCCESS);
+      return;
+    }
 
-      innerImageRef.current.addEventListener('load', () => onLoad?.());
+    /** If `lazysizes` didn't change `src` attribute yet */
+    if (IMAGE_PLACEHOLDER === innerImageRef.current.src) {
+      const mutationObserver = new MutationObserver(function mutationCallback(
+        _mutations,
+        observer
+      ) {
+        setStatus(FETCH_STATUSES.LOADING);
+        observer.disconnect();
+
+        if (!innerImageRef.current) return;
+
+        if (innerImageRef.current.complete) {
+          setStatus(FETCH_STATUSES.SUCCESS);
+          return;
+        }
+
+        function handleLoad() {
+          if (!innerImageRef.current) return;
+          innerImageRef.current.removeEventListener('load', handleLoad);
+          setStatus(FETCH_STATUSES.SUCCESS);
+        }
+
+        function handleError() {
+          if (!innerImageRef.current) return;
+          innerImageRef.current.removeEventListener('error', handleError);
+          setStatus(FETCH_STATUSES.FAILURE);
+        }
+
+        innerImageRef.current.addEventListener('load', handleLoad);
+        innerImageRef.current.addEventListener('error', handleError);
+      });
+
+      mutationObserver.observe(innerImageRef.current, {
+        attributes: true,
+        attributeFilter: ['src'],
+      });
+
+      return;
+    }
+
+    /** If image is currently loading */
+    if (
+      innerImageRef.current.src &&
+      innerImageRef.current.src !== IMAGE_PLACEHOLDER
+    ) {
+      setStatus(FETCH_STATUSES.LOADING);
+
+      const handleLoad = () => {
+        if (!innerImageRef.current) return;
+        innerImageRef.current.removeEventListener('load', handleLoad);
+        setStatus(FETCH_STATUSES.SUCCESS);
+      };
+
+      const handleError = () => {
+        if (!innerImageRef.current) return;
+        innerImageRef.current.removeEventListener('error', handleError);
+        setStatus(FETCH_STATUSES.FAILURE);
+      };
+
+      innerImageRef.current.addEventListener('load', handleLoad);
+      innerImageRef.current.addEventListener('error', handleError);
     }
   }, []);
+
+  useEffect(
+    function updateStatusChangeHandlerRef() {
+      statusChangeHandler.current = onStatusChange;
+    },
+    [onStatusChange]
+  );
+
+  useEffect(
+    function callStatusChangeHandler() {
+      if (statusChangeHandler.current) {
+        statusChangeHandler.current(status);
+      }
+    },
+    [status]
+  );
 
   return (
     <picture className={className}>
@@ -171,6 +251,7 @@ function Picture({
           assignRef(innerImageRef, imageNode);
           assignRef(outerImageRef, imageNode);
         }}
+        data-image-status={status.toLowerCase()}
       />
     </picture>
   );
