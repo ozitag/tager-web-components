@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 
 /**
  * Placeholder fixes broken image symbol: {@link https://github.com/aFarkas/lazysizes#broken-image-symbol}
@@ -15,8 +14,8 @@ import styled from 'styled-components';
  * the browser waits until the new image is loaded, then replaces the image.
  * That what we do when images are loaded lazily.
  */
-// const PLACEHOLDER =
-//   'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+export const IMAGE_PLACEHOLDER =
+  'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
 interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
 
@@ -31,10 +30,10 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
       .filter(Boolean)
       .join(' ');
     return (
-      <StyledImage
+      <img
         className={imgClassName}
         ref={ref}
-        src={isLazy ? undefined : src}
+        src={isLazy ? IMAGE_PLACEHOLDER : src}
         srcSet={isLazy ? undefined : srcSet}
         data-src={src}
         data-srcset={srcSet}
@@ -44,13 +43,5 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
     );
   }
 );
-
-const StyledImage = styled.img`
-  transition: opacity 0.3s;
-
-  &:not(.lazyloaded):not([src]) {
-    opacity: 0;
-  }
-`;
 
 export default Image;
