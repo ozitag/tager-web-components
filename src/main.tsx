@@ -4,6 +4,7 @@ export { default as TagerNextHead } from './components/next/TagerNextHead';
 export * from './components/ModalProvider';
 export * from './components/Gallery';
 export { default as Spinner } from './components/Spinner';
+export { default as ModalOverlay } from './components/Overlay';
 export { default as LoadableImage } from './components/LoadableImage';
 export { default as Page } from './components/Page';
 export { default as Preloader } from './components/Preloader';
