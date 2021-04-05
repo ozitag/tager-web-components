@@ -9,6 +9,14 @@ type Props = {
   errorCode: number;
 };
 
+function getErrorName(code: number | string): string {
+  const codeString = String(code);
+
+  if (codeString === '404') return 'Page Not Found';
+
+  return 'Server Error';
+}
+
 function Error({ errorCode, errorName, errorId }: Props) {
   const isDevelopment = process.env.NEXT_PUBLIC_ENV === 'development';
 
@@ -21,7 +29,7 @@ function Error({ errorCode, errorName, errorId }: Props) {
   ) : (
     <ErrorProd
       errorCode={errorCode}
-      errorName="Server Error"
+      errorName={getErrorName(errorCode)}
       errorId={errorId}
     />
   );
