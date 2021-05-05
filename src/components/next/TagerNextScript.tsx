@@ -76,7 +76,6 @@ class TagerNextScript extends NextScript {
 
         <script
           id="__NEXT_SCRIPT_CUSTOM"
-          defer
           dangerouslySetInnerHTML={{ __html: jsContent }}
         />
       </>

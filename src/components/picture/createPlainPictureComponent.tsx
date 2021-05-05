@@ -246,7 +246,7 @@ function Picture({
         src={src ?? undefined}
         srcSet={src2x ? `${src2x} 2x` : undefined}
         loading={loading}
-        alt={alt}
+        alt={alt ?? ''}
         ref={(imageNode) => {
           assignRef(innerImageRef, imageNode);
           assignRef(outerImageRef, imageNode);
