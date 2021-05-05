@@ -108,7 +108,7 @@ const PictureContainer = styled.div<{ backgroundColor?: string }>`
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
-  background-color: ${(props) => props.backgroundColor ?? 'none'};
+  background-color: ${(props) => props.backgroundColor ?? 'transparent'};
 
   img {
     transition: opacity 0.3s;
