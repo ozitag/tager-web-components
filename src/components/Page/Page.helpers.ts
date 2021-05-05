@@ -94,6 +94,7 @@ export function getLdJsonData(
 export function getMetaList({
   title,
   description,
+  keywords,
   openGraphTitle,
   openGraphDescription,
   openGraphImage,
@@ -101,6 +102,7 @@ export function getMetaList({
 }: {
   title?: Nullish<string>;
   description?: Nullish<string>;
+  keywords?: Nullish<string>;
   openGraphTitle?: Nullish<string>;
   openGraphDescription?: Nullish<string>;
   openGraphImage?: Nullish<string>;
@@ -128,6 +130,12 @@ export function getMetaList({
       ? {
           name: 'description',
           content: description,
+        }
+      : null,
+    keywords
+      ? {
+          name: 'keywords',
+          content: keywords,
         }
       : null,
 

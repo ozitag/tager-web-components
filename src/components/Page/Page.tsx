@@ -6,22 +6,24 @@ import { getOrigin, Nullish } from '@tager/web-core';
 
 import { getMetaList, getCanonicalUrl, getLdJsonData } from './Page.helpers';
 
-type Props = {
+interface Props {
   children?: React.ReactNode;
   title?: Nullish<string>;
   description?: Nullish<string>;
+  keywords?: Nullish<string>;
   openGraphTitle?: Nullish<string>;
   openGraphDescription?: Nullish<string>;
   openGraphImage?: Nullish<string>;
   canonicalUrl?: Nullish<string>;
   datePublished?: Nullish<string>;
   dateModified?: Nullish<string>;
-};
+}
 
 function Page({
   children,
   title,
   description,
+  keywords,
   openGraphTitle,
   openGraphDescription,
   openGraphImage,
@@ -34,6 +36,7 @@ function Page({
   const metaList = getMetaList({
     title,
     description,
+    keywords,
     openGraphTitle,
     openGraphDescription,
     openGraphImage,
