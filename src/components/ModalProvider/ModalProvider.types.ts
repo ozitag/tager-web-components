@@ -9,8 +9,11 @@ export interface State {
 }
 
 export interface CommonModalOptions {
-  components?: { Overlay?: React.ComponentType<OverlayProps> };
+  components?: {
+    Overlay?: React.ComponentType<OverlayProps>;
+  };
   withAnimation?: boolean;
+  scrollLockDisabled?: boolean;
 }
 
 export interface OpenModalFunctionOptions extends CommonModalOptions {}

@@ -65,6 +65,9 @@ function ModalProvider(props: ModalProviderProps) {
   const ModalOverlay =
     modal?.options?.components?.Overlay ?? props.components?.Overlay ?? Overlay;
 
+  const scrollLockDisabled =
+    modal?.options?.scrollLockDisabled ?? props.scrollLockDisabled ?? false;
+
   const isOpen = Boolean(modal);
 
   return (
@@ -74,6 +77,7 @@ function ModalProvider(props: ModalProviderProps) {
         data-modal-overlay
         onClose={closeModal}
         hidden={!isOpen}
+        scrollLockDisabled={scrollLockDisabled}
       >
         <ModalInner
           isOpen={isInnerContentVisible}

@@ -5,18 +5,26 @@ import { scroller } from '@tager/web-core';
 
 export interface OverlayProps extends React.HTMLAttributes<HTMLDivElement> {
   onClose: () => void;
+  scrollLockDisabled?: boolean;
 }
 
-function Overlay({ onClose, hidden, ...rest }: OverlayProps) {
+function Overlay({
+  onClose,
+  hidden,
+  scrollLockDisabled,
+  ...rest
+}: OverlayProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (scrollLockDisabled) return;
+
     if (!hidden) {
       scroller.lock(ref.current);
     }
 
     return () => scroller.unlockAll();
-  }, [hidden]);
+  }, [hidden, scrollLockDisabled]);
 
   function handleClick(event: React.MouseEvent<HTMLDivElement>) {
     /** if click occurs on overlay */
