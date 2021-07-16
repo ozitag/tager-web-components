@@ -7,7 +7,7 @@ type Props = {
   errorName: string;
   errorId?: string;
   errorCode: number;
-  getErrorDetails?: (id: string) => any;
+  getErrorDetails?: (id: string) => Promise<any>;
 };
 
 function getErrorName(code: number | string): string {
