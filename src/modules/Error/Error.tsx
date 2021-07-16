@@ -7,6 +7,7 @@ type Props = {
   errorName: string;
   errorId?: string;
   errorCode: number;
+  getErrorDetails?: (id: string) => any;
 };
 
 function getErrorName(code: number | string): string {
@@ -17,7 +18,7 @@ function getErrorName(code: number | string): string {
   return 'Server Error';
 }
 
-function Error({ errorCode, errorName, errorId }: Props) {
+function Error({ getErrorDetails, errorCode, errorName, errorId }: Props) {
   const isDevelopment = process.env.NEXT_PUBLIC_ENV === 'development';
 
   return isDevelopment ? (
@@ -25,6 +26,7 @@ function Error({ errorCode, errorName, errorId }: Props) {
       errorCode={errorCode}
       errorName={errorName}
       errorId={errorId}
+      getErrorDetails={getErrorDetails}
     />
   ) : (
     <ErrorProd

@@ -1,21 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import React, {useEffect, useRef, useState} from 'react';
+import styled, {css, keyframes} from 'styled-components';
 
-import { generateNumberArray } from '@tager/web-core';
+import {generateNumberArray} from '@tager/web-core';
 
-import { media } from '../../../../config/media';
+import {media} from '../../../../config/media';
 
-import { SentryIssueResponse } from './ErrorDevelop.types';
-import { getErrorDetails, getFailureMessage } from './ErrorDevelop.helpers';
+import {SentryIssueResponse} from './ErrorDevelop.types';
+import {getErrorDetails as defaultGetErrorDetails, getFailureMessage} from './ErrorDevelop.helpers';
 import ErrorCardFooter from './components/ErrorCardFooter';
 
 type Props = {
   errorId?: string;
   errorCode: number;
   errorName: string;
+  getErrorDetails?: (id: string) => Promise<any>;
 };
 
-function ErrorDevelop({ errorId, errorCode, errorName }: Props) {
+function ErrorDevelop({
+  getErrorDetails,
+  errorId,
+  errorCode,
+  errorName,
+}: Props) {
   const [fetchingState, setFetchingState] = useState<{
     isLoading: boolean;
     errorTitle: string | null;
@@ -26,16 +32,14 @@ function ErrorDevelop({ errorId, errorCode, errorName }: Props) {
     error: null,
   });
 
-  const { isLoading, error, errorTitle } = fetchingState;
+  const {isLoading, error, errorTitle} = fetchingState;
 
   const errorDetailsRef = useRef<SentryIssueResponse | null>(null);
   const errorDetailsCurrent = errorDetailsRef.current;
 
   const callStackLength = errorDetailsCurrent?.stacktrace.length;
   const [isCallStackCollapse, setCallStackCollapse] = useState(true);
-  const [openedStackTraceCodeLines, setOpenedStackTraceCodeLines] = useState<
-    Array<number>
-  >([]);
+  const [openedStackTraceCodeLines, setOpenedStackTraceCodeLines] = useState<Array<number>>([]);
   const callStackAvailableLength = !isCallStackCollapse ? callStackLength : 3;
 
   function expandCallStack() {
@@ -52,11 +56,15 @@ function ErrorDevelop({ errorId, errorCode, errorName }: Props) {
     }
   }
 
+  const errorDetailsPromise = getErrorDetails
+    ? getErrorDetails
+    : defaultGetErrorDetails;
+
   useEffect(() => {
     if (!errorId) return;
     if (error || errorDetailsCurrent) return;
 
-    getErrorDetails(errorId)
+    errorDetailsPromise(errorId)
       .then((response) => {
         errorDetailsRef.current = response;
 
@@ -141,7 +149,7 @@ function ErrorDevelop({ errorId, errorCode, errorName }: Props) {
                                 Line {item.line}, Col {item.col}
                               </CallStackFileLine>
                             </CallStackFile>
-                            <br />
+                            <br/>
                             <CallStackButton
                               onClick={() => expandViewCode(index)}
                             >
@@ -176,7 +184,7 @@ function ErrorDevelop({ errorId, errorCode, errorName }: Props) {
                   ) : (
                     <CallStack>
                       {generateNumberArray(3).map((num) => (
-                        <CallStackItem key={num} isLoading={isLoading} />
+                        <CallStackItem key={num} isLoading={isLoading}/>
                       ))}
                     </CallStack>
                   )}
@@ -185,7 +193,7 @@ function ErrorDevelop({ errorId, errorCode, errorName }: Props) {
             </CardInner>
           </CardScroll>
 
-          <ErrorCardFooter />
+          <ErrorCardFooter/>
         </Card>
       </Inner>
     </Container>
@@ -304,9 +312,9 @@ const ErrorMessage = styled.span<{ isLoading: boolean }>`
   word-break: break-word;
   color: #ff5555;
 
-  ${({ isLoading }) =>
-    isLoading &&
-    css`
+  ${({isLoading}) =>
+  isLoading &&
+  css`
       ${preloader};
       max-width: 500px;
     `}
@@ -333,9 +341,9 @@ const Title = styled.span<{ isLoading: boolean }>`
     margin-bottom: 20px;
   }
 
-  ${({ isLoading }) =>
-    isLoading &&
-    css`
+  ${({isLoading}) =>
+  isLoading &&
+  css`
       ${preloader};
       max-width: 350px;
     `}
@@ -351,9 +359,9 @@ const SourceCode = styled.code<{ isLoading: boolean }>`
     padding: 15px;
   `)}
 
-  ${({ isLoading }) =>
-    isLoading &&
-    css`
+  ${({isLoading}) =>
+  isLoading &&
+  css`
       ${preloader};
       min-height: 78px;
     `}
@@ -376,9 +384,9 @@ const CallStackItem = styled.li<{ isLoading: boolean }>`
     margin-bottom: 10px;
   }
 
-  ${({ isLoading }) =>
-    isLoading &&
-    css`
+  ${({isLoading}) =>
+  isLoading &&
+  css`
       ${preloader};
       min-height: 48px;
     `}
@@ -419,7 +427,7 @@ const CallStackButton = styled.code`
 
 const CallStackCodeLine = styled.div<{ isActive: boolean }>`
   white-space: nowrap;
-  background: ${({ isActive }) => (isActive ? '#ececec' : 'transparent')};
+  background: ${({isActive}) => (isActive ? '#ececec' : 'transparent')};
 `;
 
 export default ErrorDevelop;
