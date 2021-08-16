@@ -1,6 +1,6 @@
 {
   "name": "@tager/web-components",
-  "version": "0.3.12",
+  "version": "0.4.0",
   "author": "Ivan Saranchonkau",
   "license": "MIT",
   "main": "dist/index.js",
@@ -50,7 +50,7 @@
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^4.3.6",
-    "next": "^10.0.3",
+    "next": "^11.1.0",
     "prettier": "^2.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -62,7 +62,7 @@
   },
   "peerDependencies": {
     "@tager/web-core": "^0.3.7",
-    "next": "^10.0.0",
+    "next": "^11.1.0",
     "react": "^17.0.1",
     "styled-components": "^5.2.0"
   },
