@@ -7,8 +7,9 @@ import Spinner from '../Spinner';
 import {
   createPlainPictureComponent,
   PictureMediaQueryItemType,
+  PlainPictureProps,
 } from './createPlainPictureComponent';
-import { createPictureComponent } from './createPictureComponent';
+import { createPictureComponent, PictureProps } from './createPictureComponent';
 
 type MediaQueryType =
   | 'mobileSmall'
@@ -64,7 +65,7 @@ export default {
   title: 'Picture',
 };
 
-const PlainPictureTemplate: Story<React.ComponentProps<typeof PlainPicture>> = (
+const PlainPictureTemplate: Story<PlainPictureProps<MediaQueryType>> = (
   args
 ) => (
   <div style={{ maxWidth: 800 }}>
@@ -80,7 +81,7 @@ PlainPictureDefault.args = {
   // loading: 'lazy',
 };
 
-const PictureTemplate: Story<React.ComponentProps<typeof Picture>> = (args) => (
+const PictureTemplate: Story<PictureProps<MediaQueryType>> = (args) => (
   <div>
     <Picture {...args} />
   </div>

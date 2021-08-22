@@ -1,11 +1,12 @@
 module.exports = {
   extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
     'react-app',
-    'prettier/@typescript-eslint',
-    'plugin:prettier/recommended',
-    'prettier/react',
   ],
   rules: {
+    "@typescript-eslint/no-var-requires": "warn",
     'import/order': [
       'error',
       {

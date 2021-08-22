@@ -32,7 +32,7 @@ export type PictureProps<
 
 export function createPictureComponent<QueryName extends string>(
   options: PictureFactoryOptionsType<QueryName>
-) {
+): (props: PictureProps<QueryName>) => JSX.Element {
   const PlainPicture = createPlainPictureComponent(options);
 
   function SmartPicture({

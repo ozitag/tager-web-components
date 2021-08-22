@@ -283,7 +283,7 @@ export type PlainPictureProps<QueryName extends string> = CommonPictureProps &
 
 export function createPlainPictureComponent<QueryName extends string>(
   options: PictureFactoryOptionsType<QueryName>
-) {
+): (props: PlainPictureProps<QueryName>) => JSX.Element {
   const uniqueMediaQueryList = dedupeMediaQueryList(options.mediaQueryList);
 
   function PlainPicture(props: PlainPictureProps<QueryName>) {

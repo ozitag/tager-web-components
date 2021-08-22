@@ -1,4 +1,5 @@
 /// <reference types="node" />
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference types="react" />
 /// <reference types="react-dom" />
 
@@ -22,6 +23,7 @@ declare namespace NodeJS {
     readonly NEXT_PUBLIC_GOOGLE_ANALYTICS_TRACKING_ID: string | undefined;
     readonly NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID: string | undefined;
     readonly NEXT_PUBLIC_FACEBOOK_PIXEL_ID: string | undefined;
+    readonly NEXT_PUBLIC_SPLASHSCREEN_ENABLED: string | undefined;
   }
 }
 

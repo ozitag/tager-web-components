@@ -4,7 +4,7 @@ import { OverlayProps } from '../Overlay';
 
 export interface State {
   type: React.ComponentType<ModalProps>;
-  props: object;
+  props: Record<string, unknown>;
   options?: OpenModalFunctionOptions;
 }
 
@@ -16,7 +16,7 @@ export interface CommonModalOptions {
   scrollLockDisabled?: boolean;
 }
 
-export interface OpenModalFunctionOptions extends CommonModalOptions {}
+export type OpenModalFunctionOptions = CommonModalOptions;
 
 export interface OpenModalFunction<P extends ModalProps> {
   (type: React.ComponentType<P>, props: P['innerProps']): void;
@@ -27,7 +27,7 @@ export interface OpenModalFunction<P extends ModalProps> {
   ): void;
 }
 
-export interface ModalProps<T = {}> {
+export interface ModalProps<T = Record<string, unknown>> {
   closeModal: () => void;
   innerProps: T;
 }
