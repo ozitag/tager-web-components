@@ -4,7 +4,12 @@ import { useRouter } from 'next/router';
 
 import { getOrigin, Nullish } from '@tager/web-core';
 
-import { getMetaList, getCanonicalUrl, getLdJsonData } from './Page.helpers';
+import {
+  getMetaList,
+  getCanonicalUrl,
+  getLdJsonData,
+  getCurrentPath,
+} from './Page.helpers';
 
 interface Props {
   children?: React.ReactNode;
@@ -33,6 +38,8 @@ function Page({
 }: Props) {
   const router = useRouter();
 
+  const currentPath = getCurrentPath(router.basePath, router.asPath);
+
   const metaList = getMetaList({
     title,
     description,
@@ -40,13 +47,14 @@ function Page({
     openGraphTitle,
     openGraphDescription,
     openGraphImage,
-    currentPath: router.asPath,
+    currentPath,
   });
-  const canonicalUrlPrepared = getCanonicalUrl(router.asPath, canonicalUrl);
+
+  const canonicalUrlPrepared = getCanonicalUrl(currentPath, canonicalUrl);
   const homePageUrl = getOrigin();
 
   const jsonLdObject = getLdJsonData(
-    router.asPath,
+    currentPath,
     title,
     description,
     openGraphImage,
