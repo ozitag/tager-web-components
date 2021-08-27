@@ -12,6 +12,11 @@ import {
  * 1. https://support.google.com/webmasters/answer/139066
  * 2. https://yoast.com/rel-canonical/
  */
+
+export function getCurrentPath(basePath: Nullish<string>, asPath: string) {
+  return basePath && basePath !== '/' ? basePath + asPath : asPath;
+}
+
 export function getCanonicalUrl(
   currentPath: string,
   canonicalPath?: Nullish<string>
