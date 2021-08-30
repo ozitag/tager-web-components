@@ -60,8 +60,6 @@ function Page({
     openGraphImage,
     datePublished,
     dateModified,
-    'OZiTAG',
-    '/logo.svg'
   );
 
   return (

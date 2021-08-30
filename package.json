@@ -1,6 +1,6 @@
 {
   "name": "@tager/web-components",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "author": "Ivan Saranchonkau",
   "license": "MIT",
   "main": "dist/index.js",

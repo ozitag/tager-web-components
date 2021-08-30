@@ -123,14 +123,7 @@ export function getMetaList({
      * The definition of '<meta>' in that specification.
      * https://html.spec.whatwg.org/multipage/semantics.html#the-meta-element
      */
-    {
-      name: 'copyright',
-      content: 'OZiTAG LLC',
-    },
-    {
-      name: 'author',
-      content: 'OZiTAG, ozitag.com',
-    },
+
     description
       ? {
           name: 'description',
@@ -188,10 +181,6 @@ export function getMetaList({
     {
       name: 'twitter:card',
       content: 'summary',
-    },
-    {
-      name: 'twitter:creator',
-      content: 'OZiTAG, ozitag.com',
     },
     ogTitle
       ? {
