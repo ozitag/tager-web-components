@@ -45,12 +45,11 @@ const Container = styled.div`
   left: 0;
   padding: 10px;
   position: fixed;
-  z-index: 2000;
+  z-index: 10000;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: -1;
 
   &[hidden] {
     display: none;
