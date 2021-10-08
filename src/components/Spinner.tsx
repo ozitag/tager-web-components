@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { Keyframes, keyframes } from 'styled-components';
+import { styled } from '@linaria/react';
 
 interface SpinnerProps {
   show: boolean;
@@ -8,7 +8,7 @@ interface SpinnerProps {
   color?: string;
 }
 
-function Spinner(props: SpinnerProps) {
+function Spinner(props: SpinnerProps): JSX.Element {
   const size = props.size ?? 100;
   const thickness = props.thickness ?? 4;
   return (
@@ -37,34 +37,30 @@ const Inner = styled.div<{ size: number }>`
   height: ${(props) => props.size}px;
 `;
 
-function getAnimation(props: { thickness: number }): Keyframes {
-  return keyframes`
-  from {
+const Circle = styled.div<{ thickness: number; color?: string }>`
+  @keyframes rotate {
+    from {
       top: 50%;
       left: 50%;
-      width: ${props.thickness * 2}px;
-      height: ${props.thickness * 2}px;
+      width: ${(props) => props.thickness * 2}px;
+      height: ${(props) => props.thickness * 2}px;
       opacity: 1;
-  }
-  
-  to {
+    }
+    to {
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       opacity: 0;
+    }
   }
-`;
-}
 
-const Circle = styled.div<{ thickness: number; color?: string }>`
   position: absolute;
-
   border: ${(props) => props.thickness}px solid
     ${(props) => props.color ?? 'white'};
   opacity: 1;
   border-radius: 50%;
-  animation-name: ${(props) => getAnimation({ thickness: props.thickness })};
+  animation-name: rotate;
   animation-duration: 1s;
   animation-timing-function: cubic-bezier(0, 0.2, 0.8, 1);
   animation-iteration-count: infinite;

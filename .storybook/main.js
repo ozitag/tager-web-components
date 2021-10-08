@@ -20,13 +20,27 @@ module.exports = {
     },
   },
   webpackFinal: async (config) => {
+    const babelOptions = {
+      presets: [['react-app', { flow: false, typescript: true }], '@linaria'],
+    };
+
     config.module.rules.push({
       test: /\.(ts|tsx)$/,
-      loader: require.resolve('babel-loader'),
-      options: {
-        presets: [['react-app', { flow: false, typescript: true }]],
-      },
+      use: [
+        {
+          loader: require.resolve('babel-loader'),
+          options: babelOptions,
+        },
+        {
+          loader: require.resolve('@linaria/webpack-loader'),
+          options: {
+            sourceMap: process.env.NODE_ENV !== 'production',
+            babelOptions: babelOptions,
+          },
+        },
+      ],
     });
+
     config.resolve.extensions.push('.ts', '.tsx');
 
     /** Support import svg as React component */

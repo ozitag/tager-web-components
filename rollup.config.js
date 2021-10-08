@@ -5,6 +5,8 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import * as fs from 'fs-extra';
 import url from '@rollup/plugin-url';
 import { default as svgr } from '@svgr/rollup';
+import linaria from '@linaria/rollup';
+import css from 'rollup-plugin-css-only';
 
 const external = (id) => !id.startsWith('.') && !path.isAbsolute(id);
 
@@ -27,7 +29,7 @@ function getOutputName(options) {
     options.format,
     options.env,
     options.minify ? 'min' : '',
-    'js',
+    options.ext || 'js',
   ]
     .filter(Boolean)
     .join('.');
@@ -58,7 +60,9 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 function createRollupConfig(options) {
-  const minify = options.env === 'production' && options.format !== 'esm';
+  const isDevelopment = options.env === 'development';
+  const isProduction = options.env === 'production';
+  const minify = isProduction && options.format !== 'esm';
 
   return {
     input: 'src/main.tsx',
@@ -75,6 +79,16 @@ function createRollupConfig(options) {
         ref: true,
       }),
       esbuild({ minify }),
+      linaria({
+        sourceMap: isDevelopment,
+      }),
+      css({
+        output: getOutputName({
+          minify: true,
+          ext: 'css',
+          env: isDevelopment ? 'development' : null,
+        }),
+      }),
     ],
     external: (id) => {
       const packagesToIncludeInBundle = [];

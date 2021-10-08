@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import { styled } from '@linaria/react';
+import { css, cx } from '@linaria/core';
 
 import { Nullable, useOnKeyDown } from '@tager/web-core';
 
@@ -13,11 +14,12 @@ import {
 } from './ModalProvider.types';
 import { ModalContextProvider } from './ModalProvider.hooks';
 
+
 export interface ModalProviderProps extends CommonModalOptions {
   children: React.ReactNode;
 }
 
-function ModalProvider(props: ModalProviderProps) {
+function ModalProvider(props: ModalProviderProps): JSX.Element {
   const [modal, setModal] = useState<Nullable<State>>(null);
   const [isInnerContentVisible, setInnerContentVisible] = useState(false);
 
@@ -83,6 +85,7 @@ function ModalProvider(props: ModalProviderProps) {
           isOpen={isInnerContentVisible}
           withAnimation={withAnimation}
           onTransitionEnd={handleTransitionEnd}
+          className={cx(isOpen && open)}
         >
           {modal
             ? React.createElement<ModalProps>(modal.type, {
@@ -103,17 +106,13 @@ const ModalInner = styled.div<{ isOpen: boolean; withAnimation: boolean }>`
     props.withAnimation
       ? 'transform 0.35s ease-in-out, opacity 0.35s ease-in-out'
       : 'none'};
+  transform: scale(0);
+  opacity: 0;
+`;
 
-  ${(props) =>
-    props.isOpen
-      ? css`
-          transform: scale(1);
-          opacity: 1;
-        `
-      : css`
-          transform: scale(0);
-          opacity: 0;
-        `}
+const open = css`
+  transform: scale(1);
+  opacity: 1;
 `;
 
 export default ModalProvider;
