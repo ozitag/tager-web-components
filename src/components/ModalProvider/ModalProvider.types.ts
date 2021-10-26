@@ -14,6 +14,8 @@ export interface CommonModalOptions {
   };
   withAnimation?: boolean;
   scrollLockDisabled?: boolean;
+  shouldCloseOnEscape?: boolean;
+  shouldCloseOnClickOutside?: boolean;
 }
 
 export type OpenModalFunctionOptions = CommonModalOptions;

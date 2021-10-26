@@ -24,6 +24,14 @@ function ModalProvider(props: ModalProviderProps) {
   const withAnimation =
     modal?.options?.withAnimation ?? props.withAnimation ?? true;
 
+  const shouldCloseOnEscape =
+    modal?.options?.shouldCloseOnEscape ?? props.shouldCloseOnEscape ?? true;
+
+  const shouldCloseOnClickOutside =
+    modal?.options?.shouldCloseOnClickOutside ??
+    props.shouldCloseOnClickOutside ??
+    true;
+
   const openModal = useCallback<OpenModalFunction<ModalProps>>(
     (...args: Parameters<OpenModalFunction<ModalProps>>) =>
       setModal({ type: args[0], props: args[1], options: args[2] }),
@@ -57,10 +65,16 @@ function ModalProvider(props: ModalProviderProps) {
   }
 
   useOnKeyDown(['Escape', 'Esc'], () => {
-    if (modal) {
+    if (modal && shouldCloseOnEscape) {
       closeModal();
     }
   });
+
+  function handleOverlayClick() {
+    if (shouldCloseOnClickOutside) {
+      closeModal();
+    }
+  }
 
   const ModalOverlay =
     modal?.options?.components?.Overlay ?? props.components?.Overlay ?? Overlay;
@@ -75,7 +89,7 @@ function ModalProvider(props: ModalProviderProps) {
       <ModalOverlay
         data-testid="modal-overlay"
         data-modal-overlay
-        onClose={closeModal}
+        onClick={handleOverlayClick}
         hidden={!isOpen}
         scrollLockDisabled={scrollLockDisabled}
       >
