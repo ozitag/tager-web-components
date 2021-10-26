@@ -52,7 +52,7 @@ function Gallery({ options, onClose }: Props) {
   );
 
   return (
-    <Overlay onClose={onClose}>
+    <Overlay onClick={onClose}>
       <Container>
         <ImageContainer>
           <LoadableImage
