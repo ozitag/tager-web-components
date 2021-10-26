@@ -2,6 +2,9 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
+  core: {
+    builder: 'webpack5',
+  },
   stories: ['../src/**/*.stories.@(tsx)'],
   addons: [
     {
@@ -41,6 +44,38 @@ module.exports = {
       })
     );
 
+    config.module.rules.push({
+      test: /\.pcss$/,
+      sideEffects: true,
+      use: [
+        require.resolve('style-loader'),
+        {
+          loader: require.resolve('css-loader'),
+          options: {
+            importLoaders: 1,
+            modules: {
+              localIdentName: '[name]_[local]__[hash:base64:5]',
+            },
+          },
+        },
+        {
+          loader: require.resolve('postcss-loader'),
+          options: {
+            postcssOptions: {
+              plugins: [require('autoprefixer'), require('postcss-nesting')],
+            },
+            implementation: require('postcss'),
+          },
+        },
+      ],
+    });
+
+    const pcssRule = config.module.rules.find(
+      (rule) => String(rule.test) === '/\\.pcss$/'
+    );
+
+    console.log('cssRule', pcssRule.use);
+    console.log('cssRule', pcssRule.use[2]);
     return config;
   },
 };

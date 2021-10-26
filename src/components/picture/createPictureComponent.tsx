@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 import { FETCH_STATUSES, FetchStatus } from '@tager/web-core';
 
-import Spinner from '../Spinner';
+import Spinner from '../Spinner/Spinner';
 
 import {
   createPlainPictureComponent,
@@ -26,9 +26,8 @@ interface SmartPictureProps {
   spinnerComponent?: VoidFunctionComponent;
 }
 
-export type PictureProps<
-  QueryName extends string
-> = PlainPictureProps<QueryName> & SmartPictureProps;
+export type PictureProps<QueryName extends string> =
+  PlainPictureProps<QueryName> & SmartPictureProps;
 
 export function createPictureComponent<QueryName extends string>(
   options: PictureFactoryOptionsType<QueryName>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Story } from '@storybook/react';
 
 import { createMediaQuery } from '../../utils/mixin';
-import Spinner from '../Spinner';
+import Spinner from '../Spinner/Spinner';
 
 import {
   createPlainPictureComponent,

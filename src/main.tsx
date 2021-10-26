@@ -1,7 +1,7 @@
 /** Components */
 export * from './components/ModalProvider';
 export * from './components/Gallery';
-export { default as Spinner } from './components/Spinner';
+export { default as Spinner } from './components/Spinner/Spinner';
 export { default as ModalOverlay } from './components/Overlay';
 export { default as LoadableImage } from './components/LoadableImage';
 export { default as Page } from './components/Page';

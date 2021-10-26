@@ -2,6 +2,14 @@
   "include": ["src", "types"],
   "exclude": ["node_modules"],
   "compilerOptions": {
+//    "plugins": [{ "name": "typescript-plugin-css-modules",
+//      "options": {
+//        "customMatcher": "\\.module\\.(((c|le|sa|pc|sc)ss)|styl)$",
+//        "postcssOptions": {
+//          "useConfig": true
+//        }
+//      }
+//    }],
     "target": "ES2015",
     "module": "esnext",
     "lib": ["dom", "esnext"],

@@ -5,6 +5,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import * as fs from 'fs-extra';
 import url from '@rollup/plugin-url';
 import { default as svgr } from '@svgr/rollup';
+import postcss from 'rollup-plugin-postcss';
 
 const external = (id) => !id.startsWith('.') && !path.isAbsolute(id);
 
@@ -75,6 +76,11 @@ function createRollupConfig(options) {
         ref: true,
       }),
       esbuild({ minify }),
+      postcss({
+        plugins: [require('autoprefixer'), require('postcss-nesting')],
+        extract: 'styles.css',
+        modules: true,
+      }),
     ],
     external: (id) => {
       const packagesToIncludeInBundle = [];

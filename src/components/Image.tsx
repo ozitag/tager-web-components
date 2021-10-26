@@ -17,31 +17,30 @@ import React from 'react';
 export const IMAGE_PLACEHOLDER =
   'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
-interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
+const Image = React.forwardRef<
+  HTMLImageElement,
+  React.ImgHTMLAttributes<HTMLImageElement>
+>(function ImageWithRef(
+  { className, src, srcSet, loading = 'eager', ...rest },
+  ref
+) {
+  const isLazy = loading === 'lazy';
 
-const Image = React.forwardRef<HTMLImageElement, ImageProps>(
-  function ImageWithRef(
-    { className, src, srcSet, loading = 'eager', ...rest },
-    ref
-  ) {
-    const isLazy = loading === 'lazy';
-
-    const imgClassName = [className, isLazy ? 'lazyload' : null]
-      .filter(Boolean)
-      .join(' ');
-    return (
-      <img
-        className={imgClassName}
-        ref={ref}
-        src={isLazy ? IMAGE_PLACEHOLDER : src}
-        srcSet={isLazy ? undefined : srcSet}
-        data-src={src}
-        data-srcset={srcSet}
-        alt=""
-        {...rest}
-      />
-    );
-  }
-);
+  const imgClassName = [className, isLazy ? 'lazyload' : null]
+    .filter(Boolean)
+    .join(' ');
+  return (
+    <img
+      className={imgClassName}
+      ref={ref}
+      src={isLazy ? IMAGE_PLACEHOLDER : src}
+      srcSet={isLazy ? undefined : srcSet}
+      data-src={src}
+      data-srcset={srcSet}
+      alt=""
+      {...rest}
+    />
+  );
+});
 
 export default Image;

@@ -2,7 +2,7 @@ import React, { CSSProperties, useEffect, useState } from 'react';
 
 import { FETCH_STATUSES, FetchStatus } from '@tager/web-core';
 
-import Spinner from './Spinner';
+import Spinner from './Spinner/Spinner';
 
 type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
   spinnerContainerStyle?: CSSProperties;
