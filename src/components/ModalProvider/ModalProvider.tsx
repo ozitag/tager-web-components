@@ -9,7 +9,7 @@ import {
   CommonModalOptions,
   ModalProps,
   OpenModalFunction,
-  State,
+  State
 } from './ModalProvider.types';
 import { ModalContextProvider } from './ModalProvider.hooks';
 
@@ -56,7 +56,7 @@ function ModalProvider(props: ModalProviderProps) {
     }
   }
 
-  useOnKeyDown(['Escape', 'Esc'], () => {
+  useOnKeyDown(props.modalCloseKeys ?? ['Escape', 'Esc'], () => {
     if (modal) {
       closeModal();
     }
@@ -70,12 +70,14 @@ function ModalProvider(props: ModalProviderProps) {
 
   const isOpen = Boolean(modal);
 
+  const onCloseByModalOverlay = !props.disableCloseByOutside ? closeModal : undefined;
+
   return (
     <ModalContextProvider value={openModal}>
       <ModalOverlay
-        data-testid="modal-overlay"
+        data-testid='modal-overlay'
         data-modal-overlay
-        onClose={closeModal}
+        onClose={onCloseByModalOverlay}
         hidden={!isOpen}
         scrollLockDisabled={scrollLockDisabled}
       >
@@ -86,9 +88,9 @@ function ModalProvider(props: ModalProviderProps) {
         >
           {modal
             ? React.createElement<ModalProps>(modal.type, {
-                closeModal,
-                innerProps: modal.props,
-              })
+              closeModal,
+              innerProps: modal.props
+            })
             : null}
         </ModalInner>
       </ModalOverlay>
@@ -100,20 +102,20 @@ function ModalProvider(props: ModalProviderProps) {
 
 const ModalInner = styled.div<{ isOpen: boolean; withAnimation: boolean }>`
   transition: ${(props) =>
-    props.withAnimation
-      ? 'transform 0.35s ease-in-out, opacity 0.35s ease-in-out'
-      : 'none'};
+          props.withAnimation
+                  ? 'transform 0.35s ease-in-out, opacity 0.35s ease-in-out'
+                  : 'none'};
 
   ${(props) =>
-    props.isOpen
-      ? css`
-          transform: scale(1);
-          opacity: 1;
-        `
-      : css`
-          transform: scale(0);
-          opacity: 0;
-        `}
+          props.isOpen
+                  ? css`
+                    transform: scale(1);
+                    opacity: 1;
+                  `
+                  : css`
+                    transform: scale(0);
+                    opacity: 0;
+                  `}
 `;
 
 export default ModalProvider;
