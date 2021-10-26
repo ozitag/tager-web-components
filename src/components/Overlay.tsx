@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { scroller } from '@tager/web-core';
 
 export interface OverlayProps extends React.HTMLAttributes<HTMLDivElement> {
-  onClose: () => void;
+  onClose?: () => void;
   scrollLockDisabled?: boolean;
 }
 
@@ -28,7 +28,7 @@ function Overlay({
 
   function handleClick(event: React.MouseEvent<HTMLDivElement>) {
     /** if click occurs on overlay */
-    if (event.target === event.currentTarget) {
+    if (event.target === event.currentTarget && onClose) {
       onClose();
     }
   }
