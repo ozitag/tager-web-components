@@ -21,7 +21,9 @@
     "build-package": "yarn build-js && yarn emit-declarations",
     "prepare": "husky install"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@types/node": "16.x"
+  },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@rollup/plugin-url": "^6.1.0",
