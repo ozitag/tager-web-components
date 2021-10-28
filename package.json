@@ -1,6 +1,6 @@
 {
   "name": "@tager/web-components",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "author": "Ivan Saranchonkau",
   "license": "MIT",
   "main": "dist/index.js",
@@ -11,7 +11,7 @@
     "src"
   ],
   "engines": {
-    "node": ">=12"
+    "node": ">=16"
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
