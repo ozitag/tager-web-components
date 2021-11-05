@@ -89,6 +89,7 @@ export function createLinkComponent(
         isActive: isActiveProp,
         disabled,
         children,
+        onClick,
         ...restLinkProps
       }: TagerLinkProps,
       ref: React.Ref<HTMLAnchorElement>
@@ -117,13 +118,15 @@ export function createLinkComponent(
         .filter(Boolean)
         .join(' ');
 
-      function onClick(event: React.MouseEvent) {
+      function handleLinkClick(event: React.MouseEvent<HTMLAnchorElement>) {
         const path =
           typeof convertedTo === 'string' ? convertedTo : convertedTo?.as;
 
         if (!router || router.asPath === path || disabled) {
           event.preventDefault();
         }
+
+        onClick?.(event);
       }
 
       function renderLink() {
@@ -131,7 +134,7 @@ export function createLinkComponent(
           ...restLinkProps,
           className: linkClassName,
           isActive,
-          onClick,
+          onClick: handleLinkClick,
           ref,
           disabled,
         };
