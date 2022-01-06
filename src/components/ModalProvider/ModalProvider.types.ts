@@ -29,7 +29,9 @@ export interface OpenModalFunction<P extends ModalProps> {
   ): void;
 }
 
+export type closeModalFunction = () => void;
+
 export interface ModalProps<T = Record<string, unknown>> {
-  closeModal: () => void;
+  closeModal: closeModalFunction;
   innerProps: T;
 }
