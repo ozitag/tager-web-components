@@ -48,15 +48,19 @@ function AuthModal({ closeModal, innerProps }: AuthModalProps) {
 }
 
 const Template: Story = () => {
-  const openModal = useModal();
+  const { openModal, closeModal } = useModal();
 
   return (
     <div>
       <Button
         type={'button'}
-        onClick={() =>
-          openModal(AuthModal, { email: 'fwqewe@fwqe.fw', password: '423543' })
-        }
+        onClick={() => {
+          openModal(AuthModal, { email: 'fwqewe@fwqe.fw', password: '423543' });
+
+          window.setTimeout(() => {
+            closeModal();
+          }, 3000);
+        }}
       >
         Open Modal
       </Button>
