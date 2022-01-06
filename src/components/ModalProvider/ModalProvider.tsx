@@ -85,7 +85,7 @@ function ModalProvider(props: ModalProviderProps) {
   const isOpen = Boolean(modal);
 
   return (
-    <ModalContextProvider value={openModal}>
+    <ModalContextProvider value={{ openModal, closeModal }}>
       <ModalOverlay
         data-testid="modal-overlay"
         data-modal-overlay

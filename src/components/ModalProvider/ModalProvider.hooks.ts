@@ -6,20 +6,25 @@ import {
   ModalProps,
   OpenModalFunction,
   OpenModalFunctionOptions,
+  closeModalFunction,
 } from './ModalProvider.types';
 
-const [useCtx, CtxProvider] = createContextHookWithProvider<
-  OpenModalFunction<any>
->('ModalContext');
+const [useCtx, CtxProvider] = createContextHookWithProvider<{
+  openModal: OpenModalFunction<any>;
+  closeModal: closeModalFunction;
+}>('ModalContext');
 
 export function useModal() {
   const context = useCtx();
 
-  return context as <P extends ModalProps>(
-    type: React.ComponentType<P>,
-    props: P['innerProps'],
-    options?: OpenModalFunctionOptions
-  ) => void;
+  return context as {
+    openModal: <P extends ModalProps>(
+      type: React.ComponentType<P>,
+      props: P['innerProps'],
+      options?: OpenModalFunctionOptions
+    ) => void;
+    closeModal: closeModalFunction;
+  };
 }
 
 export const ModalContextProvider = CtxProvider;
