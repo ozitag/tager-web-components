@@ -100,8 +100,6 @@ export function getMetaList({
   title,
   description,
   keywords,
-  openGraphTitle,
-  openGraphDescription,
   openGraphImage,
   currentPath,
 }: {
@@ -115,8 +113,6 @@ export function getMetaList({
 }): Array<MetaHTMLAttributes<HTMLMetaElement>> {
   const currentPageUrl = getAbsoluteUrl(currentPath);
 
-  const ogTitle = openGraphTitle || title;
-  const ogDescription = openGraphDescription || description;
   return [
     /**
      * HTML Living Standard
@@ -149,16 +145,16 @@ export function getMetaList({
         }
       : null,
 
-    ogTitle
+    title
       ? {
           property: 'og:title',
-          content: ogTitle,
+          content: title,
         }
       : null,
-    ogDescription
+    description
       ? {
           property: 'og:description',
-          content: ogDescription,
+          content: description,
         }
       : null,
 
@@ -182,16 +178,16 @@ export function getMetaList({
       name: 'twitter:card',
       content: 'summary',
     },
-    ogTitle
+    title
       ? {
           name: 'twitter:title',
-          content: ogTitle,
+          content: title,
         }
       : null,
-    ogDescription
+    description
       ? {
           name: 'twitter:description',
-          content: ogDescription,
+          content: description,
         }
       : null,
     openGraphImage

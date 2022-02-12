@@ -16,8 +16,6 @@ interface Props {
   title?: Nullish<string>;
   description?: Nullish<string>;
   keywords?: Nullish<string>;
-  openGraphTitle?: Nullish<string>;
-  openGraphDescription?: Nullish<string>;
   openGraphImage?: Nullish<string>;
   canonicalUrl?: Nullish<string>;
   datePublished?: Nullish<string>;
@@ -29,8 +27,6 @@ function Page({
   title,
   description,
   keywords,
-  openGraphTitle,
-  openGraphDescription,
   openGraphImage,
   canonicalUrl,
   datePublished,
@@ -44,8 +40,6 @@ function Page({
     title,
     description,
     keywords,
-    openGraphTitle,
-    openGraphDescription,
     openGraphImage,
     currentPath,
   });
