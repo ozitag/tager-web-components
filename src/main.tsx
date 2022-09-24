@@ -12,7 +12,7 @@ export * from './components/createLinkComponent';
 export { default as Image } from './components/Image';
 
 /** Modules */
-export { default as ErrorModule } from './modules/Error';
+export { default as ErrorModule, ErrorPage } from './modules/Error';
 
 /** Typings */
 export * from './typings/common';

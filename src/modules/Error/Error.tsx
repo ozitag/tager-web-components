@@ -18,8 +18,8 @@ function getErrorName(code: number | string): string {
   return 'Server Error';
 }
 
-function Error({ getErrorDetails, errorCode, errorName, errorId }: Props) {
-  const isDevelopment = process.env.NEXT_PUBLIC_ENV === 'development';
+export default function Error({ getErrorDetails, errorCode, errorName, errorId }: Props): React.ReactElement {
+  const isDevelopment = process.env.NEXT_PUBLIC_ENV !== 'production';
 
   return isDevelopment ? (
     <ErrorDevelop
@@ -36,5 +36,3 @@ function Error({ getErrorDetails, errorCode, errorName, errorId }: Props) {
     />
   );
 }
-
-export default Error;
