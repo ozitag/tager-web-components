@@ -1,4 +1,5 @@
 import React from 'react';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import { Nullable, RequestError, RequestErrorType } from '@tager/web-core';
 
@@ -19,8 +20,7 @@ function convertErrorToProps(
 ): React.ComponentProps<typeof ErrorPage> {
   if (!error) {
     return {
-      code: 500,
-      message: 'Unknown error',
+      code: StatusCodes.INTERNAL_SERVER_ERROR,
     };
   }
 
@@ -29,7 +29,7 @@ function convertErrorToProps(
 
     return {
       code: errorObject.statusCode,
-      message: errorObject.errorMessage || 'Unknown Error',
+      message: errorObject.errorMessage,
     };
   }
 
@@ -40,7 +40,7 @@ function convertErrorToProps(
     };
   }
 
-  return { message: error.toString(), code: 500 };
+  return { message: error.toString(), code: StatusCodes.INTERNAL_SERVER_ERROR };
 }
 
 export default function ErrorPage({
@@ -48,13 +48,18 @@ export default function ErrorPage({
   code,
   message,
 }: Props): React.ReactElement {
-  let errorName: string = message ? message : 'Unknown error';
-  let errorCode: number = code !== undefined ? code : 500;
+  let errorName: string = message || 'Unknown error';
+  let errorCode: number =
+    code !== undefined ? code : StatusCodes.INTERNAL_SERVER_ERROR;
 
   if (error) {
-    const errorData = convertErrorToProps(error);
-    errorCode = errorData.code !== undefined ? errorData.code : 500;
-    errorName = errorData.message ? errorData.message : 'Unknown error';
+    const { code, message } = convertErrorToProps(error);
+    errorCode = code !== undefined ? code : StatusCodes.INTERNAL_SERVER_ERROR;
+    errorName = message || '';
+
+    if (errorName === '' && errorCode) {
+      errorName = getReasonPhrase(errorCode);
+    }
   }
 
   return (
