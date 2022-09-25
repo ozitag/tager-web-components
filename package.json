@@ -1,6 +1,6 @@
 {
   "name": "@tager/web-components",
-  "version": "0.4.14",
+  "version": "0.4.15",
   "author": "Ivan Saranchonkau",
   "license": "MIT",
   "main": "dist/index.js",
@@ -31,7 +31,7 @@
     "@storybook/react": "^6.3.7",
     "@svgr/rollup": "^5.5.0",
     "@svgr/webpack": "^5.5.0",
-    "@tager/web-core": "^0.3.19",
+    "@tager/web-core": "^0.3.32",
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
     "@types/styled-components": "^5.1.12",

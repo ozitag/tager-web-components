@@ -3299,14 +3299,15 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
-"@tager/web-core@^0.3.19":
-  version "0.3.19"
-  resolved "https://registry.yarnpkg.com/@tager/web-core/-/web-core-0.3.19.tgz#cc3ac175f8d6ae897cea2003ac5226fff2dfd432"
-  integrity sha512-LvYuaA5lePglLgulFn7K6lZ+COisSHswclp6OjcATQbbaPaNgyBzKm62QyeUypyox8ElKLtSlfXFjv0QNXW5Vg==
+"@tager/web-core@^0.3.32":
+  version "0.3.32"
+  resolved "https://registry.yarnpkg.com/@tager/web-core/-/web-core-0.3.32.tgz#b1b32d18930fa4defdf45f9469dbcf91d110d836"
+  integrity sha512-7gi9nh+xTHwWDgk/1pTPf7gBWTbb8S7NQn3f4tpL+vh+NYG8X7vBQk0hd/Nw/ddUc5fgxWzY/GSWVEUL1DHQOg==
   dependencies:
     cookie "^0.4.1"
     form-data "^4.0.0"
-    js-cookie "3.0.0-rc.4"
+    js-cookie "3.0.1"
+    lodash "^4.17.21"
     lodash-es "^4.17.21"
     nprogress "^0.2.0"
     tua-body-scroll-lock "^1.2.1"
@@ -8329,10 +8330,10 @@ joycon@^3.0.1:
   resolved "https://registry.yarnpkg.com/joycon/-/joycon-3.0.1.tgz#9074c9b08ccf37a6726ff74a18485f85efcaddaf"
   integrity sha512-SJcJNBg32dGgxhPtM0wQqxqV0ax9k/9TaUskGDSJkSFSQOEWWvQ3zzWdGQRIUry2j1zA5+ReH13t0Mf3StuVZA==
 
-js-cookie@3.0.0-rc.4:
-  version "3.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.0-rc.4.tgz#ce2b112a8a81b01cad5415be196bd99e5f6ccd00"
-  integrity sha512-L1zsb2j2Lrr6b8VsMG8kVzrUi1geAzeK9QH2C1K99JGf3BPyTmT1sEChszHs9EtuvPzskH2Tbb7fJx9Jbe11og==
+js-cookie@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.1.tgz#9e39b4c6c2f56563708d7d31f6f5f21873a92414"
+  integrity sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==
 
 js-string-escape@^1.0.1:
   version "1.0.1"

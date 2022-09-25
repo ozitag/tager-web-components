@@ -1,20 +1,29 @@
 import React from 'react';
 
-import { RequestError } from '@tager/web-core';
+import { Nullable, RequestError, RequestErrorType } from '@tager/web-core';
 
 import Page from '../../components/Page';
 
 import Error from './Error';
 
+type ErrorType = Error | RequestError | RequestErrorType;
+
 type Props = {
-  error?: Error | RequestError;
+  error?: Nullable<ErrorType>;
   code?: number;
   message?: string;
 };
 
 function convertErrorToProps(
-  error: Error | RequestError
+  error: Error | RequestError | RequestErrorType
 ): React.ComponentProps<typeof ErrorPage> {
+  if (!error) {
+    return {
+      code: 500,
+      message: 'Unknown error',
+    };
+  }
+
   if (error instanceof RequestError) {
     let errorMessage = 'Unknown Error';
 
@@ -29,6 +38,13 @@ function convertErrorToProps(
     };
   }
 
+  if ('statusCode' in error && 'errorMessage' in error) {
+    return {
+      message: error.errorMessage,
+      code: error.statusCode,
+    };
+  }
+
   return { message: error.toString(), code: 500 };
 }
 
@@ -37,15 +53,18 @@ export default function ErrorPage({
   message,
   error,
 }: Props): React.ReactElement {
+  let errorName: string = message ? message : 'Unknown error';
+  let errorCode: number = code ? code : 500;
+
   if (error) {
     const errorData = convertErrorToProps(error);
-    code = errorData.code;
-    message = errorData.message;
+    errorCode = errorData.code ? errorData.code : 500;
+    errorName = errorData.message ? errorData.message : 'Unknown error';
   }
 
   return (
-    <Page title={message}>
-      <Error errorCode={code || 500} errorName={message || 'Unknown error'} />
+    <Page title={errorName}>
+      <Error errorCode={errorCode} errorName={errorName} />
     </Page>
   );
 }
