@@ -108,7 +108,7 @@ function ErrorDevelop({
               <Block>
                 <ErrorName>
                   {!isLoading
-                    ? `${errorCode} - ${errorName}`
+                    ? `${errorCode !== 0 ? errorCode + ' - ' : ''}${errorName}`
                     : `Loading error details...`}
                 </ErrorName>
                 {!isLoading && !errorDetailsCurrent && errorId ? (

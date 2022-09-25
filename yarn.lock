@@ -3299,10 +3299,10 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
-"@tager/web-core@^0.3.32":
-  version "0.3.32"
-  resolved "https://registry.yarnpkg.com/@tager/web-core/-/web-core-0.3.32.tgz#b1b32d18930fa4defdf45f9469dbcf91d110d836"
-  integrity sha512-7gi9nh+xTHwWDgk/1pTPf7gBWTbb8S7NQn3f4tpL+vh+NYG8X7vBQk0hd/Nw/ddUc5fgxWzY/GSWVEUL1DHQOg==
+"@tager/web-core@^0.3.33":
+  version "0.3.33"
+  resolved "https://registry.yarnpkg.com/@tager/web-core/-/web-core-0.3.33.tgz#a0c5b0dd01a1a359e38c55420571e5f2d38ec37c"
+  integrity sha512-6jy2TPgdZA6TWAcbKOcGTzPx3lZYWsQh3EgUWOHwaSei62Bi2sL7y3at35+LODuDJFNt6bowRF3mJaxHxaoBWw==
   dependencies:
     cookie "^0.4.1"
     form-data "^4.0.0"

@@ -25,16 +25,11 @@ function convertErrorToProps(
   }
 
   if (error instanceof RequestError) {
-    let errorMessage = 'Unknown Error';
-
-    if (error.body && typeof error.body === 'object') {
-      errorMessage =
-        'message' in error.body ? error.body['message'] : error.status.text;
-    }
+    const errorObject = error.asObject();
 
     return {
-      code: error.status.code,
-      message: errorMessage,
+      code: errorObject.statusCode,
+      message: errorObject.errorMessage || 'Unknown Error',
     };
   }
 
@@ -49,16 +44,16 @@ function convertErrorToProps(
 }
 
 export default function ErrorPage({
+  error,
   code,
   message,
-  error,
 }: Props): React.ReactElement {
   let errorName: string = message ? message : 'Unknown error';
-  let errorCode: number = code ? code : 500;
+  let errorCode: number = code !== undefined ? code : 500;
 
   if (error) {
     const errorData = convertErrorToProps(error);
-    errorCode = errorData.code ? errorData.code : 500;
+    errorCode = errorData.code !== undefined ? errorData.code : 500;
     errorName = errorData.message ? errorData.message : 'Unknown error';
   }
 

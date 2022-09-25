@@ -13,7 +13,7 @@ function ErrorProd({ errorCode, errorName, errorId }: Props) {
   return (
     <Container>
       <Inner>
-        <Code>{errorCode}</Code>
+        {errorCode !== 0 ? <Code>{errorCode}</Code> : null}
         <Name>{errorName}</Name>
         {errorId ? <EventId>Error ID: {errorId}</EventId> : null}
       </Inner>
