@@ -17,6 +17,7 @@ interface Props {
   description?: Nullish<string>;
   keywords?: Nullish<string>;
   openGraphImage?: Nullish<string>;
+  hiddenFromSeoIndexation: boolean;
   canonicalUrl?: Nullish<string>;
   datePublished?: Nullish<string>;
   dateModified?: Nullish<string>;
@@ -28,6 +29,7 @@ function Page({
   description,
   keywords,
   openGraphImage,
+  hiddenFromSeoIndexation,
   canonicalUrl,
   datePublished,
   dateModified,
@@ -53,7 +55,7 @@ function Page({
     description,
     openGraphImage,
     datePublished,
-    dateModified,
+    dateModified
   );
 
   return (
@@ -62,8 +64,13 @@ function Page({
         <title>{title ?? ''}</title>
 
         {homePageUrl ? <link href={homePageUrl} rel="home" /> : null}
+
         {canonicalUrlPrepared ? (
           <link href={canonicalUrlPrepared} rel="canonical" />
+        ) : null}
+
+        {hiddenFromSeoIndexation ? (
+          <meta name="robots" content="noindex, nofollow" />
         ) : null}
 
         {metaList.map((metaProps, index) => (
