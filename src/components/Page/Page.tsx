@@ -17,7 +17,7 @@ interface Props {
   description?: Nullish<string>;
   keywords?: Nullish<string>;
   openGraphImage?: Nullish<string>;
-  hiddenFromSeoIndexation: boolean;
+  hiddenFromSeoIndexation?: boolean;
   canonicalUrl?: Nullish<string>;
   datePublished?: Nullish<string>;
   dateModified?: Nullish<string>;
