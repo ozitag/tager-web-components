@@ -4,9 +4,8 @@ import React, {
   RefAttributes,
   useMemo,
 } from 'react';
-import styled from 'styled-components';
 import { NextRouter, useRouter } from 'next/router';
-import NextLinkComponent, { LinkProps } from 'next/link';
+import NextLink, { LinkProps } from 'next/link';
 
 import { isNotNullish, Nullish } from '@tager/web-core';
 
@@ -51,11 +50,6 @@ function isRenderFunction(
   return typeof children === 'function';
 }
 
-const DefaultLinkComponent = styled.a<CustomLinkProps>`
-  cursor: ${(props) =>
-    props.isActive || props.disabled ? 'default' : 'pointer'};
-`;
-
 export type LinkConverterType = (link: LinkToPropType) => LinkToPropType;
 
 /**
@@ -63,18 +57,11 @@ export type LinkConverterType = (link: LinkToPropType) => LinkToPropType;
  */
 export function createLinkComponent(
   options: {
-    nextLinkComponent?: React.ComponentType<LinkProps>;
-    uiLinkComponent?: React.ElementType<CustomLinkProps>;
     converter?: LinkConverterType;
   } = {}
 ): ForwardRefExoticComponent<
   PropsWithoutRef<TagerLinkProps> & RefAttributes<HTMLAnchorElement>
 > {
-  const {
-    nextLinkComponent: NextLink = NextLinkComponent,
-    uiLinkComponent: DefaultLink = DefaultLinkComponent,
-  } = options;
-
   return React.forwardRef(
     (
       {
@@ -129,21 +116,21 @@ export function createLinkComponent(
         onClick?.(event);
       }
 
-      function renderLink() {
-        const linkProps: CustomLinkProps = {
-          ...restLinkProps,
-          className: linkClassName,
-          isActive,
-          onClick: handleLinkClick,
-          ref,
-          disabled,
-        };
+      const linkProps: CustomLinkProps = {
+        ...restLinkProps,
+        className: linkClassName,
+        isActive,
+        onClick: handleLinkClick,
+        ref,
+        disabled,
+      };
 
+      function renderLink() {
         if (isRenderFunction(children)) {
           return children(linkProps);
         } else {
           /** Use can override this component via "as" prop */
-          return <DefaultLink {...linkProps}>{children}</DefaultLink>;
+          return children;
         }
       }
 
@@ -161,6 +148,7 @@ export function createLinkComponent(
           shallow={shallow}
           passHref={disabled ? false : passHref}
           prefetch={prefetch}
+          {...linkProps}
         >
           {renderLink()}
         </NextLink>
