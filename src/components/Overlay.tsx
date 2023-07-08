@@ -9,11 +9,11 @@ export interface OverlayProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 function Overlay({
-  onClick,
-  hidden,
-  scrollLockDisabled,
-  ...rest
-}: OverlayProps) {
+                   onClick,
+                   hidden,
+                   scrollLockDisabled,
+                   ...rest
+                 }: OverlayProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,8 +33,24 @@ function Overlay({
     }
   }
 
+  let lastEvents: string[] = [];
+
   return (
-    <Container ref={ref} onClick={handleClick} hidden={hidden} {...rest} />
+    <Container ref={ref} onClick={(e) => {
+      if (lastEvents.length >= 2 && lastEvents[lastEvents.length - 2] === 'onMouseDown' && lastEvents[lastEvents.length - 1] === 'onMouseUp') {
+        handleClick(e);
+      } else if (lastEvents.length >= 3 && lastEvents[lastEvents.length - 3] === 'onMouseDown' && lastEvents[lastEvents.length - 1] === 'onMouseUp') {
+        handleClick(e);
+      } else {
+        lastEvents = [];
+      }
+    }} onMouseDown={() => {
+      lastEvents.push('onMouseDown');
+    }} onMouseUp={() => {
+      lastEvents.push('onMouseUp');
+    }} onMouseMove={() => {
+      lastEvents.push('onMouseMove');
+    }} hidden={hidden} {...rest} />
   );
 }
 
