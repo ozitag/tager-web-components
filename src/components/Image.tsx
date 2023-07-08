@@ -29,6 +29,7 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
     const imgClassName = [className, isLazy ? 'lazyload' : null]
       .filter(Boolean)
       .join(' ');
+
     return (
       <img
         className={imgClassName}

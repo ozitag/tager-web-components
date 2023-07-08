@@ -2,7 +2,7 @@ import React, {
   CSSProperties,
   useMemo,
   useState,
-  VoidFunctionComponent,
+  VoidFunctionComponent
 } from 'react';
 import styled from 'styled-components';
 
@@ -89,7 +89,6 @@ export function createPictureComponent<QueryName extends string>(
         data-picture-status={status.toLowerCase()}
       >
         {isLoading && useSpinner ? renderSpinner() : null}
-
         <PlainPicture
           {...plainPictureProps}
           onStatusChange={handleStatusChange}

@@ -1,13 +1,7 @@
 import React, { CSSProperties, useEffect, useRef, useState } from 'react';
+import 'lazysizes';
 
-import {
-  assignRef,
-  convertSrcSet,
-  FETCH_STATUSES,
-  FetchStatus,
-  getImageTypeFromUrl,
-  Nullish,
-} from '@tager/web-core';
+import { assignRef, convertSrcSet, FETCH_STATUSES, FetchStatus, getImageTypeFromUrl, Nullish } from '@tager/web-core';
 
 import Image, { IMAGE_PLACEHOLDER } from '../Image';
 
@@ -103,25 +97,27 @@ export interface SpecialPictureProps {
   imageMap: { [key: string]: PictureImageType | undefined };
 }
 
-interface InitialPictureProps extends CommonPictureProps, SpecialPictureProps {}
+interface InitialPictureProps extends CommonPictureProps, SpecialPictureProps {
+}
 
 function Picture({
-  src,
-  src2x,
-  srcWebp,
-  srcWebp2x,
-  alt,
-  className,
-  imageStyle,
-  loading,
-  imageRef: outerImageRef,
-  mediaQueryList,
-  imageMap,
-  onStatusChange,
-}: InitialPictureProps) {
+                   src,
+                   src2x,
+                   srcWebp,
+                   srcWebp2x,
+                   alt,
+                   className,
+                   imageStyle,
+                   loading,
+                   imageRef: outerImageRef,
+                   mediaQueryList,
+                   imageMap,
+                   onStatusChange
+                 }: InitialPictureProps) {
   const isLazy = loading === 'lazy';
   const innerImageRef = useRef<HTMLImageElement>(null);
   const [status, setStatus] = useState<FetchStatus>(FETCH_STATUSES.IDLE);
+
 
   const statusChangeHandler = useRef<
     CommonPictureProps['onStatusChange'] | undefined
@@ -129,6 +125,13 @@ function Picture({
 
   useEffect(function trackImageLoadStatus() {
     if (!innerImageRef.current) return;
+
+    if (loading === 'lazy' && 'lazySizes' in window) {
+      innerImageRef.current.setAttribute('src', IMAGE_PLACEHOLDER);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      window.lazySizes.loader.unveil(innerImageRef.current);
+    }
 
     /** If Image is already loaded */
     if (
@@ -147,6 +150,7 @@ function Picture({
         observer
       ) {
         setStatus(FETCH_STATUSES.LOADING);
+
         observer.disconnect();
 
         if (!innerImageRef.current) return;
@@ -174,7 +178,7 @@ function Picture({
 
       mutationObserver.observe(innerImageRef.current, {
         attributes: true,
-        attributeFilter: ['src'],
+        attributeFilter: ['src', 'data-src']
       });
 
       return;
@@ -202,7 +206,7 @@ function Picture({
       innerImageRef.current.addEventListener('load', handleLoad);
       innerImageRef.current.addEventListener('error', handleError);
     }
-  }, []);
+  }, [src]);
 
   useEffect(
     function updateStatusChangeHandlerRef() {
@@ -236,7 +240,7 @@ function Picture({
             src: src,
             src2x: src2x,
             webp: srcWebp,
-            webp2x: srcWebp2x,
+            webp2x: srcWebp2x
           }}
           isLazy={isLazy}
         />
@@ -292,7 +296,7 @@ export function createPlainPictureComponent<QueryName extends string>(
     >(
       (map, mediaQuery) => ({
         ...map,
-        [mediaQuery.name]: props[mediaQuery.name],
+        [mediaQuery.name]: props[mediaQuery.name]
       }),
       {}
     );
