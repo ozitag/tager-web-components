@@ -1,5 +1,4 @@
 import React, { CSSProperties, useEffect, useRef, useState } from 'react';
-import 'lazysizes';
 
 import { assignRef, convertSrcSet, FETCH_STATUSES, FetchStatus, getImageTypeFromUrl, Nullish } from '@tager/web-core';
 
