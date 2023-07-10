@@ -113,6 +113,7 @@ function Picture({
                    imageMap,
                    onStatusChange
                  }: InitialPictureProps) {
+
   const isLazy = loading === 'lazy';
   const innerImageRef = useRef<HTMLImageElement>(null);
   const [status, setStatus] = useState<FetchStatus>(FETCH_STATUSES.IDLE);
@@ -130,6 +131,9 @@ function Picture({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       window.lazySizes.loader.unveil(innerImageRef.current);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      window.lazySizes.loader.unveil(innerImageRef.current.parentElement);
     }
 
     /** If Image is already loaded */
@@ -148,6 +152,7 @@ function Picture({
         _mutations,
         observer
       ) {
+
         setStatus(FETCH_STATUSES.LOADING);
 
         observer.disconnect();
@@ -300,9 +305,20 @@ export function createPlainPictureComponent<QueryName extends string>(
       {}
     );
 
+    let src = props.src;
+    if (!props.src) {
+      for (const device in imageMap) {
+        if (imageMap[device]) {
+          src = imageMap[device]?.src || '';
+          break;
+        }
+      }
+    }
+
     return (
       <Picture
         {...props}
+        src={src}
         mediaQueryList={uniqueMediaQueryList}
         imageMap={imageMap}
       />
