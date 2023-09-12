@@ -253,7 +253,7 @@ function Picture({
         style={imageStyle}
         src={src ?? undefined}
         srcSet={src2x ? `${src2x} 2x` : undefined}
-        loading={loading}
+        isLazy={isLazy}
         alt={alt ?? ''}
         ref={(imageNode) => {
           assignRef(innerImageRef, imageNode);

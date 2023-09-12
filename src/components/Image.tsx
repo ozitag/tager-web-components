@@ -17,15 +17,15 @@ import React from 'react';
 export const IMAGE_PLACEHOLDER =
   'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
-interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
+interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  isLazy: boolean
+}
 
 const Image = React.forwardRef<HTMLImageElement, ImageProps>(
   function ImageWithRef(
-    { className, src, srcSet, loading = 'eager', ...rest },
+    { className, src, srcSet,  isLazy, ...rest },
     ref
   ) {
-    const isLazy = loading === 'lazy';
-
     const imgClassName = [className, isLazy ? 'lazyload' : null]
       .filter(Boolean)
       .join(' ');
@@ -38,7 +38,6 @@ const Image = React.forwardRef<HTMLImageElement, ImageProps>(
         srcSet={isLazy ? undefined : srcSet}
         data-src={src}
         data-srcset={srcSet}
-        alt=""
         {...rest}
       />
     );
