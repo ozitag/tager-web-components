@@ -88,7 +88,9 @@ const PlainPictureLazyTemplate: Story<PlainPictureProps<MediaQueryType>> = (
 
   return (
     <div style={{ maxWidth: 800 }}>
+      <div style={{height: '1500px', width: '100%', background: 'red'}}/>
       <PlainPicture {...args} src={src} />
+      <div style={{height: '0', width: '100%', background: 'red'}}/>
       <button style={{ border: '1px solid #000', padding: '10px', marginTop: '10px' }} onClick={() => {
         setSrc(src === image1 ? image2 : image1);
       }}>Change src
@@ -105,30 +107,17 @@ PlainPictureLazy.args = {
 };
 
 const PlainPictureSourceLazyTemplate: Story<PlainPictureProps<MediaQueryType>> = () => {
-  const image1 = {
-    srcWebp: 'https://dev.atlantm.by/uploads/dealers-web-main/fq/6p/FQ6PVm29FM_AUTO_AUTO.webp',
-    srcWebp2x: 'https://dev.atlantm.by/uploads/dealers-web-main/fq/6p/FQ6PVm29FM_AUTO_AUTO@2x.webp',
-    src: 'https://dev.atlantm.by/uploads/dealers-web-main/fq/6p/FQ6PVm29FM_AUTO_AUTO.png',
-    src2x: 'https://dev.atlantm.by/uploads/dealers-web-main/fq/6p/FQ6PVm29FM_AUTO_AUTO@2x.png'
-  };
-
-  const image2 = {
-    srcWebp: 'https://dev.atlantm.by/uploads/dealers-web-main/9j/z6/9Jz6yq0kpB_AUTO_AUTO.webp',
-    srcWebp2x: 'https://dev.atlantm.by/uploads/dealers-web-main/9j/z6/9Jz6yq0kpB_AUTO_AUTO@2x.webp',
-    src: 'https://dev.atlantm.by/uploads/dealers-web-main/9j/z6/9Jz6yq0kpB_AUTO_AUTO.png',
-    src2x: 'https://dev.atlantm.by/uploads/dealers-web-main/9j/z6/9Jz6yq0kpB_AUTO_AUTO@2x.png'
-  };
-
   const [imageNumber, setImageNumber] = useState<number>(0);
 
   return (
     <div style={{ maxWidth: 800 }}>
-      <PlainPicture loading="lazy" mobileSmall={{
-        src: imageNumber === 0 ? image1.src : image2.src,
-        src2x: imageNumber === 0 ? image1.src2x : image2.src2x,
-        webp: imageNumber === 0 ? image1.srcWebp : image2.srcWebp,
-        webp2x: imageNumber === 0 ? image1.srcWebp2x : image2.srcWebp2x
-      }} />
+      <div style={{height: '2000px', width: '100%', background: 'red'}}/>
+      <Picture loading="lazy"
+                    desktop={{src: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO.png', src2x: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO@2x.png', webp: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO.webp', webp2x: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO@2x.webp'}}
+                    laptop={{src: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO.png', src2x: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO@2x.png', webp: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO.webp', webp2x: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO@2x.webp'}}
+                    tabletSmall={{src: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO.png', src2x: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO@2x.png', webp: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO.webp', webp2x: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO@2x.webp'}}
+                    mobileSmall={{src: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO.png', src2x: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO@2x.png', webp: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO.webp', webp2x: 'https://atlantm.by/uploads/dealers-web-main/mi/7s/mi7sQQZ62a_AUTO_AUTO@2x.webp'}}
+      />
       <button style={{ border: '1px solid #000', padding: '10px', marginTop: '10px' }} onClick={() => {
         setImageNumber(imageNumber === 1 ? 0 : 1);
       }}>
@@ -137,6 +126,7 @@ const PlainPictureSourceLazyTemplate: Story<PlainPictureProps<MediaQueryType>> =
     </div>
   );
 };
+
 
 export const PlainPictureSourceLazy = PlainPictureSourceLazyTemplate.bind({});
 PlainPictureSourceLazy.storyName = 'PlainPictureSourceLazy';

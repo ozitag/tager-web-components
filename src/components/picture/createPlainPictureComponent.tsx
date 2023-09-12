@@ -118,7 +118,6 @@ function Picture({
   const innerImageRef = useRef<HTMLImageElement>(null);
   const [status, setStatus] = useState<FetchStatus>(FETCH_STATUSES.IDLE);
 
-
   const statusChangeHandler = useRef<
     CommonPictureProps['onStatusChange'] | undefined
   >(onStatusChange);
@@ -126,15 +125,11 @@ function Picture({
   useEffect(function trackImageLoadStatus() {
     if (!innerImageRef.current) return;
 
-    if (loading === 'lazy' && 'lazySizes' in window) {
+    if (isLazy && status === 'SUCCESS') {
       innerImageRef.current.setAttribute('src', IMAGE_PLACEHOLDER);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      window.lazySizes.loader.unveil(innerImageRef.current);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      window.lazySizes.loader.unveil(innerImageRef.current.parentElement);
-    }
+      innerImageRef.current.classList.remove('lazyloaded');
+      innerImageRef.current.classList.add('lazyload');
+    };
 
     /** If Image is already loaded */
     if (
